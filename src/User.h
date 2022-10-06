@@ -23,4 +23,8 @@ public:
     string getRole();
 
     void printInfo();
+
+    bool isUser();
+
+    bool isAdmin();
 };

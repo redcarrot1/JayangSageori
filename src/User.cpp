@@ -37,3 +37,11 @@ void User::printInfo() {
     cout << "==========================" << endl;
 }
 
+bool User::isUser() {
+    return role == "user";
+}
+
+bool User::isAdmin() {
+    return role == "admin";
+}
+
