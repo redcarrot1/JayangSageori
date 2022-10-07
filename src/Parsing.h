@@ -7,12 +7,9 @@ using namespace std;
 
 class Parsing
 {
-private:
-	vector<string> result;
-
 public:
-	Parsing() = default;
-	vector<string>  split(vector<string> line);
+	Parsing() = delete;
+	static vector<string>  split(string line);
 	
 };
 
