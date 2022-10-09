@@ -4,6 +4,7 @@ using namespace std;
 
 vector<vector<string>> File::readSplit(){	//파일 읽어서 이차원 벡터에 집어넣어 return
 	vector<vector<string>> data;
+	ifstream datafile;
 	int i = 0;
 	while (1) {
 		string line;
@@ -23,20 +24,14 @@ vector<vector<string>> File::readSplit(){	//파일 읽어서 이차원 벡터에
 	return data;
 }
 
-File::File() {
-	userdata = ".\\resource\\userdata.txt";
-	meta = ".\\resource\\meta.txt";
-	booking = ".\\book\\";
-	userid = ".\\user\\";
-	datafile;
-
+void File::start() {
 	//프로그램 시작 시, 각 디렉토리 생성 & meta.txt 이동
 	_mkdir("resource"); _mkdir("user"); _mkdir("book");	//없으면 생성, 있으면 넘어감
 	ifstream in("meta.txt");
 	if (in.is_open()) {	//처음 실행 시
-		ofstream out(userdata);
+		ofstream out(".\\resource\\userdata.txt");
 		out.close();
-		out.open(meta);
+		out.open(".\\resource\\meta.txt");
 		out << in.rdbuf();
 		out.close();
 		in.close();
@@ -47,7 +42,8 @@ File::File() {
 vector<vector<string>>File::getAllUsers() {
 	//userdata.txt
 	//UserData : userID, Name, phoneNum
-	datafile.open(userdata);
+	ifstream datafile;
+	datafile.open(".\\resource\\userdata.txt");
 	if (!datafile.is_open()) {
 		//파일 오류
 	}
@@ -58,7 +54,8 @@ vector<string>File::getMetaData() {
 	//meta.txt
 	//관리자 이름, 전화번호, 현재 회원 수, 예약 번호 
 	vector<string> data;
-	datafile.open(meta);
+	ifstream datafile;
+	datafile.open(".\\resource\\meta.txt");
 	if (!datafile.is_open()) {
 		//파일 오류
 	}
@@ -82,7 +79,8 @@ vector<string>File::getMetaData() {
 vector<vector<string>>File::getUserData(string id) {
 	//[UserID].txt
 	//user 예약 정보 : 예약번호/예약날짜/시작시각/종료시각/방번호
-	datafile.open(userid+id+".txt");
+	ifstream datafile;
+	datafile.open(".\\user\\" +id+".txt");
 	if (!datafile.is_open()) {
 		//파일 오류
 	}
@@ -91,9 +89,10 @@ vector<vector<string>>File::getUserData(string id) {
 
 vector<vector<string>>File::getBooking(string date) {//예약을 하고자 날짜를 인자로 받습니다
 	//[YYYYMMDD].txt
-	datafile.open(booking + date+ ".txt");
+	ifstream datafile;
+	datafile.open(".\\book\\" + date+ ".txt");
 	if (!datafile.is_open()) {//찾아보고 없으면 파일 생성(0으로 초기화)
-		ofstream file(booking+date+".txt");
+		ofstream file(".\\book\\" +date+".txt");
 		for (int i = 0; i < 9; i++) {//방 9개
 			for (int j = 0; j < 22; j++) {//30분 단위로 22칸
 				file << "0\t";
@@ -109,24 +108,24 @@ void File::addNewUser(vector<string> newUser) {//새로운 user의 이름, 전�
 	vector<string> metaData = getMetaData();
 	string num = to_string(stoi(metaData[2]) + 1);
 	metaData[2] = num;
-	ofstream file(meta);
+	ofstream file(".\\resource\\meta.txt");
 	file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
 	file.close();
 
 	//[UserID].txt 파일 생성(빈 파일)
-	file.open(userid+num+".txt");
+	file.open(".\\user\\" +num+".txt");
 	file.close();
 
 	//userdata.txt 마지막줄 추가
 	string user = num + "\t" + newUser[0] + "\t" + newUser[1] + "\n";
-	file.open(userdata, std::ios_base::app);
+	file.open(".\\resource\\userdata.txt", std::ios_base::app);
 	file << user;
 	file.close();
 }
 
 void File::setUserData(string id, vector<vector<string>> data) {//해당 user의 모든 예약 정보를 담은 벡터
 	//[UserId].txt
-	ofstream file(userid + id + ".txt");
+	ofstream file(".\\user\\" + id + ".txt");
 	for (int i = 0; i < data.size(); i++) {
 		for (int j = 0; j < data[i].size(); j++) {
 			file << data[i][j] + "\t";
@@ -138,7 +137,7 @@ void File::setUserData(string id, vector<vector<string>> data) {//해당 user의
 void File::setBooking(string date, vector<vector<string>>data) {
 	//[YYYYMMDD].txt
 	//해당 날짜의 예약 정보 write
-	ofstream file(booking + date + ".txt");
+	ofstream file(".\\book\\" + date + ".txt");
 	//getBooking(date);
 	for (int i = 0; i < data.size(); i++) {
 		for (int j = 0; j < data[i].size(); j++) {
@@ -151,7 +150,14 @@ void File::setBooking(string date, vector<vector<string>>data) {
 	//meta 데이터의 마지막 예약 번호 증가
 	vector<string> metaData = getMetaData();
 	metaData[3] = to_string(stoi(metaData[3]) + 1);
-	file.open(meta);
+	file.open(".\\resource\\meta.txt");
 	file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
 	file.close();
+}
+
+int main() {
+	File::start();
+	vector<string> data = { "You", "124555" };
+	File::addNewUser(data);
+	return 0;
 }
