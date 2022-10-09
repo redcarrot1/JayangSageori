@@ -89,7 +89,7 @@ vector<vector<string>>File::getUserData(string id) {
 	return readSplit();	//해당 id를 가지는 유저의 예약 정보 전체 저장 벡터 return (한 행에 한 개)
 }
 
-vector<vector<string>>File:: getBooking(string date) {//예약을 하고자 날짜를 인자로 받습니다
+vector<vector<string>>File::getBooking(string date) {//예약을 하고자 날짜를 인자로 받습니다
 	//[YYYYMMDD].txt
 	datafile.open(booking + date+ ".txt");
 	if (!datafile.is_open()) {//찾아보고 없으면 파일 생성(0으로 초기화)
