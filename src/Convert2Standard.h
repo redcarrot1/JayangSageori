@@ -7,21 +7,22 @@
 using std::string;
 using std::vector;
 
-/* ì¸ìë¡œ ì „ë‹¬í•œ ë°ì´í„° ìš”ì†Œë¥¼ í‘œì¤€í˜•ì‹ìœ¼ë¡œ ë³€í™˜í•˜ëŠ” ë©”ì†Œë“œë¥¼ ê°€ì§€ëŠ” í´ë˜ìŠ¤ */
+/* ÀÎÀÚ·Î Àü´ŞÇÑ µ¥ÀÌÅÍ ¿ä¼Ò¸¦ Ç¥ÁØÇü½ÄÀ¸·Î º¯È¯ÇÏ´Â ¸Ş¼Òµå¸¦ °¡Áö´Â Å¬·¡½º */
 class Convert2Standard {
 private:
     Convert2Standard() = delete;
-    static vector<string> split(string s, string pattern);     // êµ¬ë¶„ì ì²˜ë¦¬ë¥¼ ê°„í¸í•˜ê²Œ í•  ìˆ˜ ìˆë„ë¡ í•˜ëŠ” split ë©”ì†Œë“œ
-    static string stdPhoneNum(string phoneNum);  //ì „í™”ë²ˆí˜¸ë¥¼ í‘œì¤€í˜•ì‹ìœ¼ë¡œ ë°”ê¾¸ëŠ” ë©”ì†Œë“œ
-    static string stdName(string name);      //ì´ë¦„ì„ í‘œì¤€í˜•ì‹ìœ¼ë¡œ ë°”ê¾¸ëŠ” ë©”ì†Œë“œ
-    static string stdDate(string date);      //ë‚ ì§œë¥¼ í‘œì¤€í˜•ì‹ìœ¼ë¡œ ë°”ê¾¸ëŠ” ë©”ì†Œë“œ
-    static string stdTime(string time);      //ì‹œê°„ì„ í‘œì¤€í˜•ì‹ìœ¼ë¡œ ë°”ê¾¸ëŠ” ë©”ì†Œë“œ
-    static string correctTime(string time);  //ì‹œê°„ ë³´ì • ë©”ì†Œë“œ
-    static string stdRoomID(string roomID);    //ë°© ë²ˆí˜¸ë¥¼ í‘œì¤€í˜•ì‹ìœ¼ë¡œ ë°”ê¾¸ëŠ” ë©”ì†Œë“œ
+    static vector<string> split(string s, string pattern);     // ±¸ºĞÀÚ Ã³¸®¸¦ °£ÆíÇÏ°Ô ÇÒ ¼ö ÀÖµµ·Ï ÇÏ´Â split ¸Ş¼Òµå
+    static string stdPhoneNum(string phoneNum);  //ÀüÈ­¹øÈ£¸¦ Ç¥ÁØÇü½ÄÀ¸·Î ¹Ù²Ù´Â ¸Ş¼Òµå
+    static string stdName(string name);      //ÀÌ¸§À» Ç¥ÁØÇü½ÄÀ¸·Î ¹Ù²Ù´Â ¸Ş¼Òµå
+    static string stdDate(string date);      //³¯Â¥¸¦ Ç¥ÁØÇü½ÄÀ¸·Î ¹Ù²Ù´Â ¸Ş¼Òµå
+    static string stdTime(string time);      //½Ã°£À» Ç¥ÁØÇü½ÄÀ¸·Î ¹Ù²Ù´Â ¸Ş¼Òµå
+    static string correctTime(string time);  //½Ã°£ º¸Á¤ ¸Ş¼Òµå
+    static string stdRoomID(string roomID);    //¹æ ¹øÈ£¸¦ Ç¥ÁØÇü½ÄÀ¸·Î ¹Ù²Ù´Â ¸Ş¼Òµå
 
 public:
-    static vector<string> convertSign(vector<string> argv);    // íšŒì›ê°€ì…, ë¡œê·¸ì¸ string name, string phoneNum
-    static vector<string> convertBook(vector<string> argv);    // ì˜ˆì•½í•˜ê¸° string date, string roomID, string startTime, string endTime
-    static vector<string> convertList(vector<string> argv);    // ì˜ˆì•½ ìƒíƒœ í™•ì¸ string date
-    static vector<string> convertSearch(vector<string> argv);  // íšŒì› ì •ë³´ ê²€ìƒ‰ vector<string> argument (1ê°œì¼ìˆ˜ë„, 2ê°œì¼ìˆ˜ë„)
+    static string stdCommand(string command);
+    static vector<string> convertSign(vector<string> argv);    // È¸¿ø°¡ÀÔ, ·Î±×ÀÎ string name, string phoneNum
+    static vector<string> convertBook(vector<string> argv);    // ¿¹¾àÇÏ±â string date, string roomID, string startTime, string endTime
+    static vector<string> convertList(vector<string> argv);    // ¿¹¾à »óÅÂ È®ÀÎ string date
+    static vector<string> convertSearch(vector<string> argv);  // È¸¿ø Á¤º¸ °Ë»ö vector<string> argument (1°³ÀÏ¼öµµ, 2°³ÀÏ¼öµµ)
 };

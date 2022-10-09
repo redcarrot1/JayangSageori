@@ -6,85 +6,81 @@
 
 using namespace std;
 
-// ^: ì´ìƒ, _: ì´í•˜
+// ^: ÀÌ»ó, _: ÀÌÇÏ
 vector<string> Convert2Standard::split(string s, string pattern){
     regex re(pattern);
     sregex_token_iterator it(s.begin(), s.end(), re, -1), end;
     return vector<string>(it, end);
 }
 
-/*í‘œí˜„ ì •ì˜*/
-// ^: ì´ìƒ, _: ì´í•˜
-//ì™„ì„±
+/*Ç¥Çö Á¤ÀÇ*/
+// ^: ÀÌ»ó, _: ÀÌÇÏ
 string Convert2Standard::stdPhoneNum(string phoneNum) {
-    // 1. ê¸¸ì´ í™•ì¸ (7^20_)
+    // 1. ±æÀÌ È®ÀÎ (7^20_)
     int length = phoneNum.length();
     string std = "";
     if ( length<7 || 20<length ){
         throw WrongLengthArgumentException(phoneNum, "7-20");
     }
-    // 2. ë¬¸ì í™•ì¸ ([0-9] ['-'|[0-9]] [0-9])
+    // 2. ¹®ÀÚ È®ÀÎ ([0-9] ['-'|[0-9]] [0-9])
     for(int i=0 ; i<length ; i++){
         char ch = phoneNum[i];
 
         if(!isdigit(ch) && ch != '-'){
-            throw WrongCharArgumentException(phoneNum, ch);  // ì˜ëª»ëœ ë¬¸ì
+            throw WrongCharArgumentException(phoneNum, ch);  // Àß¸øµÈ ¹®ÀÚ
         }
         if((i == 0 || i == length-1) && ch == '-'){
             ArgumentException h = ArgumentException(phoneNum);
             string basicError(h.getError());
-            h.setError(basicError+"\në§¨ ì•ì´ë‚˜ ë§¨ ë’¤ì— í•˜ì´í”ˆ(-)ì´ ì¡´ì¬í•©ë‹ˆë‹¤.");
+            h.setError(basicError+"\n¸Ç ¾ÕÀÌ³ª ¸Ç µÚ¿¡ ÇÏÀÌÇÂ(-)ÀÌ Á¸ÀçÇÕ´Ï´Ù.");
             throw h;
         }
         if(isdigit(ch)) {
             std.push_back(ch);
         }
     }
-    // 3. ìˆ«ìì˜ ê°œìˆ˜ í™•ì¸ ([0-9]{7^11_})
+    // 3. ¼ıÀÚÀÇ °³¼ö È®ÀÎ ([0-9]{7^11_})
     if( std.length()<7 || 11<std.length()){
-        throw WrongRuleArgumentException(phoneNum, "ì „í™”ë²ˆí˜¸ëŠ” 7ê¸€ì ì´ìƒ 11ê¸€ì ì´í•˜ì˜ ê¸¸ì´ë¥¼ ë§Œì¡±í•´ì•¼í•©ë‹ˆë‹¤.");
+        throw WrongRuleArgumentException(phoneNum, "ÀüÈ­¹øÈ£´Â 7±ÛÀÚ ÀÌ»ó 11±ÛÀÚ ÀÌÇÏÀÇ ±æÀÌ¸¦ ¸¸Á·ÇØ¾ßÇÕ´Ï´Ù.");
     }
-    return std;  // í‘œì¤€í˜•ì‹ ë°˜í™˜
+    return std;  // Ç¥ÁØÇü½Ä ¹İÈ¯
 }
 
-//ì™„ì„±
 string Convert2Standard::stdName(string name) {
-    // 1. ê¸¸ì´ í™•ì¸ (2^30_)
+    // 1. ±æÀÌ È®ÀÎ (2^30_)
     int length = name.length();
     string std = "";
     if ( length<2 || 30<length ){
         throw WrongLengthArgumentException(name, "2-30");
     }
-    // 2. ë¬¸ì í™•ì¸ ([a-z]|[A-z])
+    // 2. ¹®ÀÚ È®ÀÎ ([a-z]|[A-z])
     for(int i=0 ; i<length ; i++){
         char ch = name[i];
-        int gap = 0;
         if(!isalpha(ch)){
-            throw WrongCharArgumentException(name, ch);  // ì˜ëª»ëœ ë¬¸ì
+            throw WrongCharArgumentException(name, ch);  // Àß¸øµÈ ¹®ÀÚ
         }
         if('A' <= ch && ch <= 'Z'){
             ch = tolower(ch);
         }
-        std.push_back(ch); // í‘œì¤€í˜•ì‹ : .lower()
+        std.push_back(ch); // Ç¥ÁØÇü½Ä : .lower()
     }
     return std;
 }
 
-//ì™„ì„±
 string Convert2Standard::stdDate(string date) {
-    // 1. ê¸¸ì´ í™•ì¸ 6^10_
+    // 1. ±æÀÌ È®ÀÎ 6^10_
     int length = date.length();
     bool flag = false;
     string std = "";
     if ( length<6 || 10<length ){
         throw WrongLengthArgumentException(date, "6-10");
     }
-    // 2. ë¬¸ìí™•ì¸
+    // 2. ¹®ÀÚÈ®ÀÎ
     // 2-1) [0-9]{2|4}['/'|'-'][0-9]{2}['/'|'-'][0-9]{2}
     for(int i=0 ; i<length ; i++){
         char ch = date[i];
         if(!isdigit(ch) && ch != '-' && ch != '/' ){
-            throw WrongCharArgumentException(date, ch);  // ì˜ëª»ëœ ë¬¸ì
+            throw WrongCharArgumentException(date, ch);  // Àß¸øµÈ ¹®ÀÚ
         }
         if( ch == '-' || ch == '/'){
             flag = true;
@@ -98,28 +94,28 @@ string Convert2Standard::stdDate(string date) {
         if (std.length() != 6 && std.length() != 8) {
             ArgumentException e = ArgumentException(date);
             string basicError(e.getError());
-            e.setError(basicError+"\nêµ¬ë¶„ìë¥¼ ì‚¬ìš©í•˜ì§€ ì•ŠëŠ”ê²½ìš°, ë‚ ì§œëŠ” 6ê°œ ë˜ëŠ” 8ê°œì˜ ìˆ«ìë¡œ í‘œí˜„ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.");
+            e.setError(basicError+"\n±¸ºĞÀÚ¸¦ »ç¿ëÇÏÁö ¾Ê´Â°æ¿ì, ³¯Â¥´Â 6°³ ¶Ç´Â 8°³ÀÇ ¼ıÀÚ·Î Ç¥ÇöµÇ¾î¾ß ÇÕ´Ï´Ù.");
             throw e;
         }
     }
-    // í‘œì¤€í˜•ì‹ : 20YY-MM-DD ì¶”ê°€ ì²˜ë¦¬
+    // Ç¥ÁØÇü½Ä : 20YY-MM-DD Ãß°¡ Ã³¸®
     if(std.length()<=6){
-        //ì•ì— 20 ì‚½ì…
+        //¾Õ¿¡ 20 »ğÀÔ
         std.insert(0, "20");
     }
-    // 2-3) êµ¬ë¶„ì ì˜ëª» ì‚¬ìš©í•œê±´ ì•„ë‹Œì§€ ê²€ì¦ + êµ¬ë¶„ì ì´ìš©í•  ë•Œ í‘œì¤€í˜•ì‹ ì¶”ê°€ ì²˜ë¦¬
+    // 2-3) ±¸ºĞÀÚ Àß¸ø »ç¿ëÇÑ°Ç ¾Æ´ÑÁö °ËÁõ + ±¸ºĞÀÚ ÀÌ¿ëÇÒ ¶§ Ç¥ÁØÇü½Ä Ãß°¡ Ã³¸®
     if(flag) {
         vector<string> d = split(date, R"(-|/)");
         if (d.size() != 3 || date.back() == '-' || date.back() == '/') {
             ArgumentException e = ArgumentException(date);
             string basicError(e.getError());
-            e.setError(basicError+"\nêµ¬ë¶„ì ì‚¬ìš©ì´ ì˜ëª»ë˜ì—ˆìŠµë‹ˆë‹¤.");
+            e.setError(basicError+"\n±¸ºĞÀÚ »ç¿ëÀÌ Àß¸øµÇ¾ú½À´Ï´Ù.");
             throw e;
         }
         if (d.at(0).length() != 2 && d.at(0).length() != 4) {
             ArgumentException e = ArgumentException(date);
             string basicError(e.getError());
-            e.setError(basicError+"\n(êµ¬ë¶„ì ì‚¬ìš©ì‹œ) ì—°ë„(year)ëŠ” 2ê°œ ë˜ëŠ” 4ê°œì˜ ìˆ«ìë¡œ í‘œí˜„ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.");
+            e.setError(basicError+"\n(±¸ºĞÀÚ »ç¿ë½Ã) ¿¬µµ(year)´Â 2°³ ¶Ç´Â 4°³ÀÇ ¼ıÀÚ·Î Ç¥ÇöµÇ¾î¾ß ÇÕ´Ï´Ù.");
             throw e;
         }
         if (d.at(1).length() != 2) {
@@ -128,7 +124,7 @@ string Convert2Standard::stdDate(string date) {
             } else {
                 ArgumentException e = ArgumentException(date);
                 string basicError(e.getError());
-                e.setError(basicError+"\n(êµ¬ë¶„ì ì‚¬ìš©ì‹œ) ì›”(month)ì€ 1ê°œ ë˜ëŠ” 2ê°œì˜ ìˆ«ìë¡œ í‘œí˜„ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.");
+                e.setError(basicError+"\n(±¸ºĞÀÚ »ç¿ë½Ã) ¿ù(month)Àº 1°³ ¶Ç´Â 2°³ÀÇ ¼ıÀÚ·Î Ç¥ÇöµÇ¾î¾ß ÇÕ´Ï´Ù.");
                 throw e;
             }
         }
@@ -138,26 +134,25 @@ string Convert2Standard::stdDate(string date) {
             } else {
                 ArgumentException e = ArgumentException(date);
                 string basicError(e.getError());
-                e.setError(basicError+"\n(êµ¬ë¶„ì ì‚¬ìš©ì‹œ) ì¼(day)ì€ 1ê°œ ë˜ëŠ” 2ê°œì˜ ìˆ«ìë¡œ í‘œí˜„ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.");
+                e.setError(basicError+"\n(±¸ºĞÀÚ »ç¿ë½Ã) ÀÏ(day)Àº 1°³ ¶Ç´Â 2°³ÀÇ ¼ıÀÚ·Î Ç¥ÇöµÇ¾î¾ß ÇÕ´Ï´Ù.");
                 throw e;
             }
         }
     }
-    // ì‚¬ì´ì— - ì‚½ì…
+    // »çÀÌ¿¡ - »ğÀÔ
     std.insert(4, "-");
     std.insert(7, "-");
     return std;
 }
 
-//ì™„ì„±
 string Convert2Standard::correctTime(string stdtime){
-    // ì‹œê°„ ë³´ì •
+    // ½Ã°£ º¸Á¤
     vector<string> c = split(stdtime, R"(:)");
     string shh = c.at(0);
     string smm = c.at(1);
     int chh = stoi(shh);
     int cmm = stoi(smm);
-    // a. if((int ëª« = int(MM)/HOUR) == 1) { HH+ëª«, MM+ë‚˜ë¨¸ì§€(%) }
+    // a. if((int ¸ò = int(MM)/HOUR) == 1) { HH+¸ò, MM+³ª¸ÓÁö(%) }
     if(cmm/60 == 1){
         chh++;
         cmm = cmm%60;
@@ -181,9 +176,8 @@ string Convert2Standard::correctTime(string stdtime){
     return shh+":"+smm;
 }
 
-//ì™„ì„±
 string Convert2Standard::stdTime(string time) {
-    // 1. ê¸¸ì´ í™•ì¸ 1^5_
+    // 1. ±æÀÌ È®ÀÎ 1^5_
     int length = time.length();
     bool flag = false;
     string std = "";
@@ -191,12 +185,12 @@ string Convert2Standard::stdTime(string time) {
     if ( length<1 || 5<length ){
         throw WrongLengthArgumentException(time, "1-5");
     }
-    // 2. ë¬¸ì í™•ì¸
+    // 2. ¹®ÀÚ È®ÀÎ
     // 2-1) [0-9]{1-2}['/'|'-'|':'][0-9]{1-2}
     for(int i=0 ; i<length ; i++){
         char ch = time[i];
         if(!isdigit(ch) && ch != '/' && ch != '-' && ch != ':'){
-            throw WrongCharArgumentException(time, ch);  // ì˜ëª»ëœ ë¬¸ì
+            throw WrongCharArgumentException(time, ch);  // Àß¸øµÈ ¹®ÀÚ
         }
         if( ch == '/' || ch == '-' || ch == ':'){
             flag = true;
@@ -210,10 +204,10 @@ string Convert2Standard::stdTime(string time) {
         if (std.length()<1 || 4<std.length()) {
             ArgumentException e = ArgumentException(time);
             string basicError(e.getError());
-            e.setError(basicError+"\nêµ¬ë¶„ìë¥¼ ì‚¬ìš©í•˜ì§€ ì•ŠëŠ”ê²½ìš°, ì‹œê°„ì€ 1ê°œì—ì„œ 4ê°œì˜ ìˆ«ìë¡œ í‘œí˜„ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.");
+            e.setError(basicError+"\n±¸ºĞÀÚ¸¦ »ç¿ëÇÏÁö ¾Ê´Â°æ¿ì, ½Ã°£Àº 1°³¿¡¼­ 4°³ÀÇ ¼ıÀÚ·Î Ç¥ÇöµÇ¾î¾ß ÇÕ´Ï´Ù.");
             throw e;
         }
-        // êµ¬ë¶„ì ì—†ì„ ë•Œ í‘œì¤€í˜•ì‹ ì²˜ë¦¬
+        // ±¸ºĞÀÚ ¾øÀ» ¶§ Ç¥ÁØÇü½Ä Ã³¸®
         if (std.length()==1 || std.length()==2){
             std.append(":00");
             if(std.length()==1){
@@ -227,13 +221,13 @@ string Convert2Standard::stdTime(string time) {
             std.insert(2,":");
         }
     }
-    // êµ¬ë¶„ì ìˆì„ ë•Œ í‘œì¤€í˜•ì‹ ì²˜ë¦¬
+    // ±¸ºĞÀÚ ÀÖÀ» ¶§ Ç¥ÁØÇü½Ä Ã³¸®
     if(flag) {
         vector<string> t = split(time, R"(-|/|:)");
         if (t.size() != 2 || time.back() == '-' || time.back() == '/' || time.back() == ':') {
             ArgumentException e = ArgumentException(time);
             string basicError(e.getError());
-            e.setError(basicError+"\nêµ¬ë¶„ì ì‚¬ìš©ì´ ì˜ëª»ë˜ì—ˆìŠµë‹ˆë‹¤.");
+            e.setError(basicError+"\n±¸ºĞÀÚ »ç¿ëÀÌ Àß¸øµÇ¾ú½À´Ï´Ù.");
             throw e;
         }
         if (t.at(0).length() != 2) {
@@ -243,7 +237,7 @@ string Convert2Standard::stdTime(string time) {
             else {
                 ArgumentException e = ArgumentException(time);
                 string basicError(e.getError());
-                e.setError(basicError + "\n(êµ¬ë¶„ì ì‚¬ìš©ì‹œ) ì‹œê°„(hour)ëŠ” 1ê°œ ë˜ëŠ” 2ê°œì˜ ìˆ«ìë¡œ í‘œí˜„ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.");
+                e.setError(basicError + "\n(±¸ºĞÀÚ »ç¿ë½Ã) ½Ã°£(hour)´Â 1°³ ¶Ç´Â 2°³ÀÇ ¼ıÀÚ·Î Ç¥ÇöµÇ¾î¾ß ÇÕ´Ï´Ù.");
                 throw e;
             }
         }
@@ -254,7 +248,7 @@ string Convert2Standard::stdTime(string time) {
             else {
                 ArgumentException e = ArgumentException(time);
                 string basicError(e.getError());
-                e.setError(basicError+"\n(êµ¬ë¶„ì ì‚¬ìš©ì‹œ) ë¶„(minute)ì€ 1ê°œ ë˜ëŠ” 2ê°œì˜ ìˆ«ìë¡œ í‘œí˜„ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.");
+                e.setError(basicError+"\n(±¸ºĞÀÚ »ç¿ë½Ã) ºĞ(minute)Àº 1°³ ¶Ç´Â 2°³ÀÇ ¼ıÀÚ·Î Ç¥ÇöµÇ¾î¾ß ÇÕ´Ï´Ù.");
                 throw e;
             }
         }
@@ -264,67 +258,58 @@ string Convert2Standard::stdTime(string time) {
     return correctstd;
 }
 
-//ì™„ì„±
 string Convert2Standard::stdRoomID(string roomID) {
-    //1. ê¸¸ì´í™•ì¸ (1)
+    //1. ±æÀÌÈ®ÀÎ (1)
     int length = roomID.length();
     string std = "";
     if ( length!=1 ){
         throw WrongLengthArgumentException(roomID, "1");
     }
-    //2. ë¬¸ìí™•ì¸([1-9])
+    //2. ¹®ÀÚÈ®ÀÎ([1-9])
     if(!isdigit(roomID[0])) {
-        throw WrongCharArgumentException(roomID, roomID[0]);  // ì˜ëª»ëœ ë¬¸ì
+        throw WrongCharArgumentException(roomID, roomID[0]);  // Àß¸øµÈ ¹®ÀÚ
     }
-    // í‘œì¤€í˜•ì‹ : ê·¸ëŒ€ë¡œ (ê·œì¹™ë§Œ ë§Œì¡±í•˜ë©´ ê·¸ëŒ€ë¡œ ë°˜í™˜)
+    // Ç¥ÁØÇü½Ä : ±×´ë·Î (±ÔÄ¢¸¸ ¸¸Á·ÇÏ¸é ±×´ë·Î ¹İÈ¯)
     std = roomID;
     return std;
 }
 
 /*public*/
-//ì™„ì„±
 vector<string> Convert2Standard::convertSign(vector<string> argv) {
-    // ì¸ì ê°œìˆ˜ ë°˜ë“œì‹œ 2ê°œ
-    // ì²«ë²ˆì§¸ ì¸ì : ì´ë¦„, ë‘ë²ˆì§¸ ì¸ì : ì „í™”ë²ˆí˜¸
+    // ÀÎÀÚ °³¼ö ¹İµå½Ã 2°³
+    // Ã¹¹øÂ° ÀÎÀÚ : ÀÌ¸§, µÎ¹øÂ° ÀÎÀÚ : ÀüÈ­¹øÈ£
     vector<string> returnArgv;
-    int argNum = argv.size();
+    int argNum = argv.size()-1;
     if(argNum != 2) {
         throw WrongNumArgumentException("signup/in");
     }
-    returnArgv.push_back(stdName(argv.at(0)));
-    returnArgv.push_back(stdPhoneNum(argv.at(1)));
-
+    returnArgv.push_back(stdName(argv.at(1)));
+    returnArgv.push_back(stdPhoneNum(argv.at(2)));
     return returnArgv;
 }
 
-//ì™„ì„±
 vector<string> Convert2Standard::convertBook(vector<string> argv) {
-    // ì¸ì ê°œìˆ˜ ë°˜ë“œì‹œ 4ê°œ
-    // 1.ë‚ ì§œ, 2.ë°©ë²ˆí˜¸, 3,4.ì‹œê°„
+    // ÀÎÀÚ °³¼ö ¹İµå½Ã 4°³
+    // 1.³¯Â¥, 2.¹æ¹øÈ£, 3,4.½Ã°£
     vector<string> returnArgv;
-    int argNum = argv.size();
+    int argNum = argv.size()-1;
     if(argNum != 4){
         throw WrongNumArgumentException("book");
     }
-    returnArgv.push_back(stdDate(argv.at(0)));
-    returnArgv.push_back(stdRoomID(argv.at(1)));
-    returnArgv.push_back(stdTime(argv.at(2)));
+    returnArgv.push_back(stdDate(argv.at(1)));
+    returnArgv.push_back(stdRoomID(argv.at(2)));
     returnArgv.push_back(stdTime(argv.at(3)));
-
+    returnArgv.push_back(stdTime(argv.at(4)));
     return returnArgv;
 }
 
-//ì™„ì„±
 vector<string> Convert2Standard::convertList(vector<string> argv) {
-    // ì¸ì ê°œìˆ˜ 0ê°œ ë˜ëŠ” 1ê°œ
-    // ë‚ ì§œ
+    // ÀÎÀÚ °³¼ö 0°³ ¶Ç´Â 1°³
+    // ³¯Â¥
     vector<string> returnArgv;
-    int argNum = argv.size();
-    if(argNum == 0){
-        return argv;
-    }
-    else if(argNum == 1){
-        returnArgv.push_back(stdDate(argv.at(0)));
+    int argNum = argv.size()-1;
+    if(argNum == 1){
+        returnArgv.push_back(stdDate(argv.at(1)));
     }
     else {
         throw WrongNumArgumentException("list");
@@ -332,29 +317,28 @@ vector<string> Convert2Standard::convertList(vector<string> argv) {
     return returnArgv;
 }
 
-//ì™„ì„±
 vector<string> Convert2Standard::convertSearch(vector<string> argv) {
-    // ë°˜í™˜ í˜•ì‹ : ì´ë¦„ - ì „í™”ë²ˆí˜¸
-    // ì¸ì ê°œìˆ˜ 0ê°œ ~ 2ê°œ (ì²˜ë¦¬í•¨)
+    // ¹İÈ¯ Çü½Ä : ÀÌ¸§ - ÀüÈ­¹øÈ£
+    // ÀÎÀÚ °³¼ö 0°³ ~ 2°³ (Ã³¸®ÇÔ)
     string name;
     string phoneNum;
     vector<string> returnArgv;
-    int argNum = argv.size();
+    int argNum = argv.size()-1;
     if(argNum == 0){
         return argv;
     }
     else if(argNum == 1){
-        bool numflag = false;  //ìˆ«ìê°€ ë‚˜íƒ€ë‚˜ë©´ true;
-        bool alphaflag = false; //ì˜ì–´ê°€ ë‚˜íƒ€ë§ˆë…€ true
+        bool numflag = false;  //¼ıÀÚ°¡ ³ªÅ¸³ª¸é true;
+        bool alphaflag = false; //¿µ¾î°¡ ³ªÅ¸¸¶³à true
         int index = 0;
-        // 1ê°œ-1 ê¸¸ì´ ì²´í¬ : (2^50_)
-        int length = argv.at(0).length();
+        // 1°³-1 ±æÀÌ Ã¼Å© : (2^50_)
+        int length = argv.at(1).length();
         if (length<2 || 50<length){
-            throw WrongLengthArgumentException(argv.at(0), "2-50");
+            throw WrongLengthArgumentException(argv.at(1), "2-50");
         }
-        // 1ê°œ-2 ë¬¸ì ì²´í¬ : [0-9]|[a-z]|[A-Z] & // 1ê°œ-3 ë¬¸ìë¼ë¦¬, ìˆ«ìë¼ë¦¬ ëª¨ì€ë’¤ ë°ì´í„° í‘œì¤€ë³€í™˜ ìš”ì†Œ í˜¸ì¶œ
+        // 1°³-2 ¹®ÀÚ Ã¼Å© : [0-9]|[a-z]|[A-Z] & // 1°³-3 ¹®ÀÚ³¢¸®, ¼ıÀÚ³¢¸® ¸ğÀºµÚ µ¥ÀÌÅÍ Ç¥ÁØº¯È¯ ¿ä¼Ò È£Ãâ
         for(int i=0 ; i<length ; i++) {
-            char ch = argv.at(0)[i];
+            char ch = argv.at(1)[i];
             if(!numflag && isdigit(ch)){
                 numflag = true;
                 index = i;
@@ -363,21 +347,21 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
                 alphaflag = true;
             }
             if(!isdigit(ch) && !isalpha(ch) && ch!='-') {
-                throw WrongCharArgumentException(argv.at(0), ch);  // ì˜ëª»ëœ ë¬¸ì
+                throw WrongCharArgumentException(argv.at(1), ch);  // Àß¸øµÈ ¹®ÀÚ
             }
-            if(alphaflag && numflag && isalpha(ch)) { //ì˜ì–´->ìˆ«ì->ì˜ì–´ í˜¼í•©
-                throw ArgumentException(argv.at(0));
+            if(alphaflag && numflag && isalpha(ch)) { //¿µ¾î->¼ıÀÚ->¿µ¾î È¥ÇÕ
+                throw ArgumentException(argv.at(1));
             }
         }
-        if(!numflag) { //ìˆ«ì ì—†ì„ ë–„
-            name = argv.at(0);
+        if(!numflag) { //¼ıÀÚ ¾øÀ» ‹š
+            name = argv.at(1);
         }
-        else if(!alphaflag) {  //ì˜ì–´ ì—†ì„ ë–„
-            phoneNum = argv.at(0);
+        else if(!alphaflag) {  //¿µ¾î ¾øÀ» ‹š
+            phoneNum = argv.at(1);
         }
-        else {  //ë‘˜ë‹¤ ë“¤ì–´ì˜¨ ê²½ìš°
-            name = argv.at(0).substr(0, index);
-            phoneNum = argv.at(0).substr(index);
+        else {  //µÑ´Ù µé¾î¿Â °æ¿ì
+            name = argv.at(1).substr(0, index);
+            phoneNum = argv.at(1).substr(index);
         }
 
         if(!name.empty()){
@@ -388,33 +372,33 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
         }
     }
     else if(argNum == 2){
-        // 2ê°œ : ì–´ë–¤ ìš”ì†Œê°€ ìˆ«ìì¸ì§€ / ì˜ì–´ì¸ì§€ íŒŒì•…í•˜ì—¬ ì´ë¦„-ì „í™”ë²ˆí˜¸ í˜¸ì¶œ (ì²«ë²ˆì§¸ ê°’ìœ¼ë¡œ íŒë‹¨)
-        if(isdigit(argv.at(0)[0])){
-            if(isalpha(argv.at(1)[0])){
-                phoneNum = argv.at(0);
-                name = argv.at(1);
+        // 2°³ : ¾î¶² ¿ä¼Ò°¡ ¼ıÀÚÀÎÁö / ¿µ¾îÀÎÁö ÆÄ¾ÇÇÏ¿© ÀÌ¸§-ÀüÈ­¹øÈ£ È£Ãâ (Ã¹¹øÂ° °ªÀ¸·Î ÆÇ´Ü)
+        if(isdigit(argv.at(1)[0])){
+            if(isalpha(argv.at(2)[0])){
+                phoneNum = argv.at(1);
+                name = argv.at(2);
             }
             else{
                 CommandException e = CommandException("search");
                 string basicError(e.getError());
-                e.setError(basicError+"ì¸ìê°€ 2ê°œì¸ ê²½ìš° í•˜ë‚˜ëŠ” ì´ë¦„, í•˜ë‚˜ëŠ” ì „í™”ë²ˆí˜¸ í˜•ì‹ì„ ë”°ë¼ì•¼í•©ë‹ˆë‹¤.");
+                e.setError(basicError+"ÀÎÀÚ°¡ 2°³ÀÎ °æ¿ì ÇÏ³ª´Â ÀÌ¸§, ÇÏ³ª´Â ÀüÈ­¹øÈ£ Çü½ÄÀ» µû¶ó¾ßÇÕ´Ï´Ù.");
                 throw e;
             }
         }
-        else if(isalpha(argv.at(0)[0])){
-            if(isdigit(argv.at(1)[0])){
-                name = argv.at(0);
-                phoneNum = argv.at(1);
+        else if(isalpha(argv.at(1)[0])){
+            if(isdigit(argv.at(2)[0])){
+                name = argv.at(1);
+                phoneNum = argv.at(2);
             }
             else{
                 CommandException e = CommandException("search");
                 string basicError(e.getError());
-                e.setError(basicError+"ì¸ìê°€ 2ê°œì¸ ê²½ìš° í•˜ë‚˜ëŠ” ì´ë¦„, í•˜ë‚˜ëŠ” ì „í™”ë²ˆí˜¸ í˜•ì‹ì„ ë”°ë¼ì•¼í•©ë‹ˆë‹¤.");
+                e.setError(basicError+"ÀÎÀÚ°¡ 2°³ÀÎ °æ¿ì ÇÏ³ª´Â ÀÌ¸§, ÇÏ³ª´Â ÀüÈ­¹øÈ£ Çü½ÄÀ» µû¶ó¾ßÇÕ´Ï´Ù.");
                 throw e;
             }
         }
         else{
-            throw ArgumentException(argv.at(0));
+            throw ArgumentException(argv.at(1));
         }
         returnArgv.push_back(stdName(name));
         returnArgv.push_back(stdPhoneNum(phoneNum));
@@ -424,3 +408,28 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
     }
     return returnArgv;
 }
+
+//Ãß°¡
+string Convert2Standard::stdCommand(string command) {
+    int length = command.length();
+    string std;
+    // 1. ±æÀÌ È®ÀÎ (2^30_)
+    // 2. ¹®ÀÚ È®ÀÎ ([a-z]|[A-z])
+    for(int i=0 ; i<length ; i++){
+        char ch = command[i];
+        if(!isalpha(ch)){
+            throw WrongCommandException(command);
+        }
+        if('A' <= ch && ch <= 'Z'){  // ´ë¼Ò¹®ÀÚ º¯È¯
+            ch = tolower(ch);
+        }
+        std.push_back(ch);
+    }
+    vector<string> commandList = {"back", "exit", "logout", "help", "signup", "signin", "book", "list", "check", "logout", "ask"};
+    auto it = find(commandList.begin(), commandList.end(), std);
+    if (it == commandList.end()){
+        throw WrongCommandException(command);
+    }
+    return std;
+}
+
