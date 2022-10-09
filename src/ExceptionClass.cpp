@@ -4,7 +4,7 @@
 
 using namespace std;
 
-//ÌÅ¥ÎûòÏä§ Ï†ïÏùò
+//≈¨∑°Ω∫ ¡§¿«
 const char * CustomException::getError() const {
     return error.c_str();
 }
@@ -16,21 +16,21 @@ const char * CustomException::what() const noexcept {
 }
 
 CommandException::CommandException(string command) : command(command) {
-    this->setError("Î™ÖÎ†πÏñ¥ "+command+"(Ïù¥)Í∞Ä ÏûòÎ™ªÎêòÏóàÏäµÎãàÎã§.");
+    this->setError("∏Ì∑…æÓ "+command+"(¿Ã)∞° ¿ﬂ∏¯µ«æ˙Ω¿¥œ¥Ÿ.");
 }
 const string &CommandException::getCommand() const {
     return this->command;
 }
 
 ArgumentException::ArgumentException(string str) : str(str) {
-    this->setError("Ïù∏Ïûê "+str+"(Ïù¥)Í∞Ä ÏûòÎ™ªÎêòÏóàÏäµÎãàÎã§.");
+    this->setError("¿Œ¿⁄ "+str+"(¿Ã)∞° ¿ﬂ∏¯µ«æ˙Ω¿¥œ¥Ÿ.");
 }
 const string &ArgumentException::getStr() const {
     return this->str;
 }
 
 FileException::FileException() {
-    this->setError("ÌååÏùºÏóê Î¨∏Ï†úÍ∞Ä ÏûàÏäµÎãàÎã§.");
+    this->setError("∆ƒ¿œø° πÆ¡¶∞° ¿÷Ω¿¥œ¥Ÿ.");
 }
 const string &FileException::getFilePath()const {
     return this->filepath;
@@ -40,37 +40,37 @@ void FileException::setFilePath(const std::string &path) {
 }
 
 UnableCommandException::UnableCommandException(string command, string cmd) : CommandException(command), cmd(cmd) {
-    this->setError("ÌòÑÏû¨ Î™ÖÎ†πÏ∞Ω "+this->cmd+"ÏóêÏÑú "+this->getCommand()+"ÏùÄ(Îäî) ÏÇ¨Ïö©Ìï† Ïàò ÏóÜÎäî Î™ÖÎ†πÏñ¥ÏûÖÎãàÎã§.");
+    this->setError("«ˆ¿Á ∏Ì∑…√¢ "+this->cmd+"ø°º≠ "+this->getCommand()+"¿∫(¥¬) ªÁøÎ«“ ºˆ æ¯¥¬ ∏Ì∑…æÓ¿‘¥œ¥Ÿ.");
 }
 
 WrongCommandException::WrongCommandException(string command) : CommandException(command) {
-    this->setError("Î™ÖÎ†πÏñ¥ "+this->getCommand()+"ÏùÄ(Îäî) Ï°¥Ïû¨ÌïòÏßÄ ÏïäÎäî Î™ÖÎ†πÏñ¥ÏûÖÎãàÎã§.");
+    this->setError("∏Ì∑…æÓ "+this->getCommand()+"¿∫(¥¬) ¡∏¿Á«œ¡ˆ æ ¥¬ ∏Ì∑…æÓ¿‘¥œ¥Ÿ.");
 }
 
 WrongNumArgumentException::WrongNumArgumentException(string command) : ArgumentException(command) {
-    this->setError("Î™ÖÎ†πÏñ¥ "+this->getStr()+"(Ïù¥)Í∞Ä Í∞ÄÏßà Ïàò ÏûàÎäî Ïù∏ÏûêÏùò Í∞úÏàòÏôÄ Îã§Î¶ÖÎãàÎã§.");
+    this->setError("∏Ì∑…æÓ "+this->getStr()+"(¿Ã)∞° ∞°¡˙ ºˆ ¿÷¥¬ ¿Œ¿⁄¿« ∞≥ºˆøÕ ¥Ÿ∏®¥œ¥Ÿ.");
 }
 
 WrongCharArgumentException::WrongCharArgumentException(string argument, char ch) : ArgumentException(argument), ch(ch) {
-    this->setError("ÏûÖÎ†• Ïù∏Ïûê "+this->getStr()+"Ïóê ÏÇ¨Ïö©Ìï† Ïàò ÏóÜÎäî Î¨∏Ïûê \'"+this->ch+"\'(Ïù¥)Í∞Ä Ï°¥Ïû¨Ìï©ÎãàÎã§.");
+    this->setError("¿‘∑¬ ¿Œ¿⁄ "+this->getStr()+"ø° ªÁøÎ«“ ºˆ æ¯¥¬ πÆ¿⁄ \'"+this->ch+"\'(¿Ã)∞° ¡∏¿Á«’¥œ¥Ÿ.");
 }
 
 WrongLengthArgumentException::WrongLengthArgumentException(string argument, string length) : ArgumentException(argument), length(length) {
-    this->setError("ÏûÖÎ†• Ïù∏Ïûê "+this->getStr().substr(0, 10)+"Í∞Ä ÌóàÏö© Í∞ÄÎä•Ìïú Í∏∏Ïù¥ Î≤îÏúÑ ["+this->length+"] (ÏùÑ)Î•º Î≤óÏñ¥ÎÇ¨ÏäµÎãàÎã§.");
+    this->setError("¿‘∑¬ ¿Œ¿⁄ "+this->getStr().substr(0, 10)+"∞° «„øÎ ∞°¥…«— ±Ê¿Ã π¸¿ß ["+this->length+"] (¿ª)∏¶ π˛æÓ≥µΩ¿¥œ¥Ÿ.");
 }
 
 WrongRuleArgumentException::WrongRuleArgumentException(string argument, string rule) : ArgumentException(argument), rule(rule) {
-    this->setError("ÏûÖÎ†• Ïù∏Ïûê "+this->getStr()+"(Ïù¥)Í∞Ä ÏùòÎØ∏Í∑úÏπôÏùÑ ÎßåÏ°±ÌïòÏßÄ Î™ªÌï©ÎãàÎã§.\nÍ∑úÏπô : "+this->rule);
+    this->setError("¿‘∑¬ ¿Œ¿⁄ "+this->getStr()+"(¿Ã)∞° ¿«πÃ±‘ƒ¢¿ª ∏∏¡∑«œ¡ˆ ∏¯«’¥œ¥Ÿ.\n±‘ƒ¢ : "+this->rule);
 }
 
 NotExistFileException::NotExistFileException(string filepath) {
     this->setFilePath(filepath);
-    this->setError("\'"+this->getFilePath()+"\'"+"(ÏùÄ)Îäî Ï°¥Ïû¨ÌïòÏßÄ ÏïäÎäî ÌååÏùºÏûÖÎãàÎã§.");
+    this->setError("\'"+this->getFilePath()+"\'"+"(¿∫)¥¬ ¡∏¿Á«œ¡ˆ æ ¥¬ ∆ƒ¿œ¿‘¥œ¥Ÿ.");
 }
 
 WrongFormatFileException::WrongFormatFileException(string filepath) {
     this->setFilePath(filepath);
-    this->setError("\'"+this->getFilePath()+"\'"+"Ïóê Ï†ÄÏû•Îêú ÎÇ¥Ïö©Ïùò ÌòïÏãùÏóê Î¨∏Ï†úÍ∞Ä Ï°¥Ïû¨Ìï©ÎãàÎã§.");
+    this->setError("\'"+this->getFilePath()+"\'"+"ø° ¿˙¿Âµ» ≥ªøÎ¿« «¸Ωƒø° πÆ¡¶∞° ¡∏¿Á«’¥œ¥Ÿ.");
 }
 
 NotExistMetaFileException::NotExistMetaFileException(string filepath) : NotExistFileException(filepath) { }
@@ -78,22 +78,22 @@ NotExistMetaFileException::NotExistMetaFileException(string filepath) : NotExist
 WrongFormatMetaFileException::WrongFormatMetaFileException(string filepath) : WrongFormatFileException(filepath) { }
 
 
-//Î©îÏÜåÎìú Ï†ïÏùò
+//∏ﬁº“µÂ ¡§¿«
 void exceptionMannager(exception& e){
     string exceptionName = typeid(e).name();
     vector<string> helpExceptionList = { typeid(CommandException).name(), typeid(UnableCommandException).name(), typeid(WrongCommandException).name()};
     vector<string> exitExceptionList = { typeid(FileException).name(), typeid(NotExistMetaFileException).name(), typeid(WrongFormatMetaFileException).name(), typeid(NotExistFileException).name(), typeid(WrongFormatFileException).name()};
-    cout << "[Ïò§Î•ò] " << exceptionName << " ÏòàÏô∏Í∞Ä Î∞úÏÉùÌïòÏòÄÏäµÎãàÎã§." << endl;
-    cout << e.what() << endl;  // ÏÑ∏Î∂Ä Ï†ïÎ≥¥
+    cout << "[ø¿∑˘] " << exceptionName << " øπø‹∞° πﬂª˝«œø¥Ω¿¥œ¥Ÿ." << endl;
+    cout << e.what() << endl;  // ºº∫Œ ¡§∫∏
 
     auto itHelp = find(helpExceptionList.begin(), helpExceptionList.end(), exceptionName);
     if (itHelp != helpExceptionList.end()){
-        cout<<"ÎèÑÏõÄÎßêÏùÑ Ï∂úÎ†•Ìï©ÎãàÎã§."<<endl;
-        // help Ìò∏Ï∂ú
+        cout<<"µµøÚ∏ª¿ª √‚∑¬«’¥œ¥Ÿ."<<endl;
+        // help »£√‚
     }
     auto itExit = find(exitExceptionList.begin(), exitExceptionList.end(), exceptionName);
     if (itExit != exitExceptionList.end()){
-        cout<<"ÌîÑÎ°úÍ∑∏Îû®ÏùÑ Ï¢ÖÎ£åÌï©ÎãàÎã§."<<endl;
+        cout<<"«¡∑Œ±◊∑•¿ª ¡æ∑·«’¥œ¥Ÿ."<<endl;
         exit(EXIT_FAILURE);
     }
 }
