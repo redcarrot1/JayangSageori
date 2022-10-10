@@ -7,7 +7,7 @@
 using std::string;
 using std::exception;
 
-/*í´ë˜ìŠ¤ ì„ ì–¸*/
+/*Å¬·¡½º ¼±¾ğ*/
 class CustomException : public exception {
 private:
     string error = "default error Message";
@@ -17,8 +17,8 @@ public:
     const char * what() const noexcept override;
 };
 
-// 1ë‹¨ê³„ ìƒì†
-class CommandException : public CustomException {   // ìƒì„±ì ì¸ì string 1ê°œë¡œ ì •ì˜
+// 1´Ü°è »ó¼Ó
+class CommandException : public CustomException {   // »ı¼ºÀÚ ÀÎÀÚ string 1°³·Î Á¤ÀÇ
 private:
     string command;
 public:
@@ -36,14 +36,14 @@ public:
 
 class FileException : public CustomException {
 private:
-    string filepath = "filepath"; //ê¸°ë³¸ê°’
+    string filepath = "filepath"; //±âº»°ª
 public:
     FileException();
     const string &getFilePath() const;
     void setFilePath(const string &path);
 };
 
-// 2ë‹¨ê³„ ìƒì†
+// 2´Ü°è »ó¼Ó
 class UnableCommandException : public CommandException {
 private:
     string cmd;
@@ -92,7 +92,7 @@ public:
     WrongFormatFileException(string filepath);
 };
 
-// 3ë‹¨ê³„ ìƒì† (File)
+// 3´Ü°è »ó¼Ó (File)
 
 class NotExistMetaFileException : public NotExistFileException {
 public:
@@ -104,6 +104,6 @@ public:
     WrongFormatMetaFileException(string filepath = "meta.txt");
 };
 
-/*ë©”ì†Œë“œ ì„ ì–¸*/
+/*¸Ş¼Òµå ¼±¾ğ*/
 void exceptionMannager(exception& e);
 //void exceptionMannager(string exceptionName);
