@@ -8,7 +8,6 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
 	string startMinute = sUseStartTime.substr(2, 2); stringstream sStartMinute(startMinute); int minuteStart; sStartMinute >> minuteStart; this->startMin = minuteStart;
 	string endHour = sUseEndTime.substr(0, 2); stringstream sEndHour(endHour); int hourEnd; sEndHour >> hourEnd; this->endHour = hourEnd;
 	string endMinute = sUseEndTime.substr(2, 2); stringstream sEndMinute(endMinute);int minuteEnd; sEndMinute >> minuteEnd; this->endMin = minuteEnd;
-	this->sdate = sdate;
 	sIndex = (this->startHour - 9) * 2;
 	eIndex = (this->startMin - 9) * 2;
 	if (this->startMin == 30) {
@@ -17,11 +16,13 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
 	if (this->endMin == 30) {
 		eIndex += 1;
 	}
-	this->sdate.erase(remove(sdate.begin(), sdate.end(), '-'));
+	sdate.erase(remove(sdate.begin(), sdate.end(), '-'),sdate.end());
+	this->sdate = sdate;
+	cout << this->sdate << endl; //테스트 코드
 	bookFileData = File::getBooking(sdate);
 	userData = File::getUserData(userId);
-	cout << bookFileData.size();
-	cout << userData.size();
+	cout << bookFileData.size() << endl; //테스트 코드
+	cout << userData.size() << endl; //테스트 코드
 }
 
 bool Book::checkReservation(){
