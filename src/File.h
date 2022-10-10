@@ -4,18 +4,14 @@
 #include<fstream>
 #include<string>
 #include<vector>
-#include<direct.h>	//mkdir
 #include<sstream>
+#include<filesystem>
 
 using namespace std;
+namespace fs = filesystem;
 
 class File
 {
-private:
-
-
-	static vector<vector<string>> readSplit(string path);
-
 public:
 	static void start();
 	static vector<vector<string>>getAllUsers();

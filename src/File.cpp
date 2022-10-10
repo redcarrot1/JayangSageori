@@ -1,60 +1,56 @@
 #include "File.h"
 
 using namespace std;
-
-vector<vector<string>> File::readSplit(string path){	//파일 읽어서 이차원 벡터에 집어넣어 return
-	vector<vector<string>> data;
-	ifstream datafile;
-	datafile.open(path);
-	int i = 0;
-	while (1) {
-		string line;
-		getline(datafile, line);
-		if (line == "")
-			break;
-		istringstream iss(line);
-		string str_buf;
-		while (getline(iss, str_buf, '\t')) {
-			vector<string> v;
-			data.push_back(v);
-			data[i].push_back(str_buf);
-		}
-		i++;
-	}
-	datafile.close();
-	return data;
-}
+namespace fs = filesystem;
 
 void File::start() {
 	//프로그램 시작 시, 각 디렉토리 생성 & meta.txt 이동
-	_mkdir("resource"); _mkdir("user"); _mkdir("book");	//없으면 생성, 있으면 넘어감
-	ifstream in("meta.txt");
-	if (in.is_open()) {	//처음 실행 시
-		ofstream out(".\\resource\\userdata.txt");
-		out.close();
-		out.open(".\\resource\\meta.txt");
-		out << in.rdbuf();
-		out.close();
-		in.close();
-		_unlink("meta.txt");	//배포된 외부의 meta.txt 삭제 (resource 폴더 안으로 이동)
+	if (!fs::exists("book")) {fs::create_directory("book");}
+	if(!fs::exists("user")){ fs::create_directory("user"); }
+	if (!fs::exists("resource")) { fs::create_directory("resource"); }
+	if (!fs::exists("resource\\userdata.txt")) { ofstream("resource\\userdata.txt"); }
+	if (fs::exists("meta.txt")) {
+		if (!fs::exists("resource\\meta.txt")) {
+			fs::copy("meta.txt", "resource\\meta.txt");
+		}
+		fs::remove("meta.txt");
+	}
+	else {
+		try {
+			if (!fs::exists("resource\\meta.txt"))	throw NotExistMetaFileException();
+		}
+		catch (exception& e) {
+			exceptionMannager(e);
+		}
 	}
 }
 
 vector<vector<string>>File::getAllUsers() {
 	//userdata.txt
 	//UserData : userID, Name, phoneNum
+	vector<vector<string>> data;
 	ifstream datafile;
 	try {
 		datafile.open(".\\resource\\userdata.txt");
-		if (!datafile.is_open()) {
-			throw NotExistFileException("userdata.txt");
+		if (!datafile.is_open())	throw NotExistFileException("userdata.txt");
+	}
+	catch (exception& e) {
+		exceptionMannager(e);
+	}
+	string line;
+	while (1) {
+		getline(datafile, line);
+		if (line == "")	break;
+		istringstream iss(line);
+		string str_buf;
+		vector<string> v;
+		while (getline(iss, str_buf, '\t')) {
+			v.push_back(str_buf);
 		}
-		
+		data.push_back(v);
 	}
-	catch(exception &e){
-		cout << e.what() << endl;
-	}
-	return  readSplit(".\\resource\\userdata.txt");		//UserData 전체 return (한 행에 한 명씩)
+	datafile.close();
+	return  data;		//UserData 전체 return (한 행에 한 명씩)
 }
 	
 vector<string>File::getMetaData() {	
@@ -67,10 +63,8 @@ vector<string>File::getMetaData() {
 		if (!datafile.is_open())	throw NotExistMetaFileException();
 	}
 	catch (exception &e) {
-		cout << e.what() << endl;
+		exceptionMannager(e);
 	}
-
-	int i = 0;
 	while (1) {
 		string line;
 		getline(datafile, line);
@@ -81,7 +75,6 @@ vector<string>File::getMetaData() {
 		while (getline(iss, str_buf, '\t')) {
 			data.push_back(str_buf);
 		}
-		i++;
 	}
 	datafile.close();
 	return data;//정보 4개를 저장하는 벡터 return
@@ -90,60 +83,114 @@ vector<string>File::getMetaData() {
 vector<vector<string>>File::getUserData(string id) {
 	//[UserID].txt
 	//user 예약 정보 : 예약번호/예약날짜/시작시각/종료시각/방번호
+	vector<vector<string>> data;
 	ifstream datafile;
 	try {
 		datafile.open(".\\user\\" + id + ".txt");
-		if (!datafile.is_open()) {
-			throw NotExistFileException(id + ".txt");
-		}
-
+		if (!datafile.is_open())	throw NotExistFileException(id + ".txt");
 	}
 	catch (exception& e) {
-		cout << e.what() << endl;
+		exceptionMannager(e);
 	}
-	return readSplit(".\\user\\" + id + ".txt");	//해당 id를 가지는 유저의 예약 정보 전체 저장 벡터 return (한 행에 한 개)
+	string line;
+	while (1) {
+		getline(datafile, line);
+		if (line == "")	break;
+		istringstream iss(line);
+		string str_buf;
+		vector<string> v;
+		while (getline(iss, str_buf, '\t')) {
+			v.push_back(str_buf);
+		}
+		data.push_back(v);
+	}
+	datafile.close();
+	return data;	//해당 id를 가지는 유저의 예약 정보 전체 저장 벡터 return (한 행에 한 개)
 }
 
 vector<vector<string>>File::getBooking(string date) {//예약을 하고자 날짜를 인자로 받습니다
 	//[YYYYMMDD].txt
-	string ymd = date.substr(0,4) + date.substr(5,2) + date.substr(8,2);//표준형식으로부터 변환
-	ifstream datafile;
-	datafile.open(".\\book\\" + ymd+ ".txt");
-	if (!datafile.is_open()) {//찾아보고 없으면 파일 생성(0으로 초기화)
-		ofstream file(".\\book\\" +ymd+".txt");
+	date.erase(remove(date.begin(), date.end(), '-'), date.end());//표준형식으로부터 변환
+	ofstream file;
+	if (!fs::exists(".\\book\\" + date + ".txt")) {//찾아보고 없으면 파일 생성(0으로 초기화)
+		file.open(".\\book\\" + date + ".txt");
 		for (int i = 0; i < 9; i++) {//방 9개
 			for (int j = 0; j < 22; j++) {//30분 단위로 22칸
 				file << "0\t";
 			}
 			file << "\n";
 		}
+		file.close();
 	}
-	return readSplit(".\\book\\" + ymd + ".txt"); //해당 날짜의 예약 정보 전체 저장 벡터 return (한 행에 한 스터디룸)
+	ifstream datafile(".\\book\\" + date + ".txt");
+	vector<vector<string>> data;
+	string line;
+	while (1) {
+		getline(datafile, line);
+		if (line == "")	break;
+		istringstream iss(line);
+		string str_buf;
+		vector<string> v;
+		while (getline(iss, str_buf, '\t')) {
+			v.push_back(str_buf);
+		}
+		data.push_back(v);
+	}
+	datafile.close();
+	return data; //해당 날짜의 예약 정보 전체 저장 벡터 return (한 행에 한 스터디룸)
 }
 
 void File::addNewUser(vector<string> newUser) {//새로운 user의 이름, 전화번호를 담고 있는 벡터
-	//meta.txt 수정
+	ofstream file;
 	vector<string> metaData = getMetaData();
-	string num = to_string(stoi(metaData[2]) + 1);
-	metaData[2] = num;
-	ofstream file(".\\resource\\meta.txt");
-	file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
-	file.close();
+	string num = "";
+	//meta.txt 수정
+	try {	//metadata 파일 format 확인
+		if (metaData.size() != 4)	throw WrongFormatMetaFileException();
+		num = to_string(stoi(metaData[2]) + 1);
+		metaData[2] = num;
+	}
+	catch (exception &e) {
+		exceptionMannager(e);
+	}
+	try {	//metadata 파일 존재 확인
+		file.open(".\\resource\\meta.txt");
+		if (!file.is_open())	throw NotExistMetaFileException();
+		file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
+		file.close();
+	}
+	catch(exception &e){
+		exceptionMannager(e);
+	}
 
 	//[UserID].txt 파일 생성(빈 파일)
 	file.open(".\\user\\" +num+".txt");
 	file.close();
 
 	//userdata.txt 마지막줄 추가
-	string user = num + "\t" + newUser[0] + "\t" + newUser[1] + "\n";
-	file.open(".\\resource\\userdata.txt", std::ios_base::app);
-	file << user;
-	file.close();
+	try {
+		string user = num + "\t" + newUser[0] + "\t" + newUser[1] + "\n";
+		file.open(".\\resource\\userdata.txt", std::ios_base::app);
+		if (!file.is_open())	throw NotExistFileException("userdata.txt");
+		file << user;
+		file.close();
+	}
+	catch (exception &e) {
+		exceptionMannager(e);
+	}
+	
 }
 
 void File::setUserData(string id, vector<vector<string>> data) {//해당 user의 모든 예약 정보를 담은 벡터
 	//[UserId].txt
-	ofstream file(".\\user\\" + id + ".txt");
+	ofstream file;
+	try {
+		file.open(".\\user\\" + id + ".txt");
+		if (!file.is_open())	throw NotExistFileException(id + ".txt");
+	}
+	catch(exception &e){
+		exceptionMannager(e);
+	}
 	for (int i = 0; i < data.size(); i++) {
 		for (int j = 0; j < data[i].size(); j++) {
 			file << data[i][j] + "\t";
@@ -156,10 +203,10 @@ void File::setUserData(string id, vector<vector<string>> data) {//해당 user의
 void File::setBooking(string date, vector<vector<string>>data) {
 	//[YYYYMMDD].txt
 	//해당 날짜의 예약 정보 write
-	string ymd = date.substr(0, 4) + date.substr(5, 2) + date.substr(8, 2);
-	ofstream file(".\\book\\" + ymd + ".txt");
+	date.erase(remove(date.begin(), date.end(), '-'), date.end());//표준형식으로부터 변환
+	ofstream file(".\\book\\" + date + ".txt");
 	if (!file.is_open()) {//찾아보고 없으면 파일 생성(0으로 초기화)
-		ofstream file(".\\book\\" + ymd + ".txt");
+		ofstream file(".\\book\\" + date + ".txt");
 		for (int i = 0; i < 9; i++) {//방 9개
 			for (int j = 0; j < 22; j++) {//30분 단위로 22칸
 				file << "0\t";
@@ -176,11 +223,25 @@ void File::setBooking(string date, vector<vector<string>>data) {
 	file.close();
 
 	//meta 데이터의 마지막 예약 번호 증가
-	vector<string> metaData = getMetaData();
-	metaData[3] = to_string(stoi(metaData[3]) + 1);
-	file.open(".\\resource\\meta.txt");
-	file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
-	file.close();
+	vector<string> metaData;
+	try {
+		metaData = getMetaData();
+		if (metaData.size() != 4)	throw WrongFormatMetaFileException();
+		metaData[3] = to_string(stoi(metaData[3]) + 1);
+		
+	}
+	catch (exception& e) {
+		exceptionMannager(e);
+	}
+	try {
+		file.open(".\\resource\\meta.txt");
+		if (!file.is_open())	throw NotExistMetaFileException();
+		file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
+		file.close();
+	}
+	catch (exception& e) {
+		exceptionMannager(e);
+	}
 }
 
 
