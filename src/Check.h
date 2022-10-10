@@ -10,6 +10,7 @@ public:
 	Check() = delete;
 	Check(string userid);
 	void showReservationList();
+	void excuteCheck();
 private:
 	string userid;
 	vector<vector<string>> userData;

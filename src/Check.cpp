@@ -8,11 +8,18 @@ Check::Check(string userid) {
 void Check::showReservationList() {
 	int row = userData.size();
 	int col = userData[0].size();
+	// 출력문은 작동 확인되면 수정하겠습니다.
 	for (int i = 0; i < row; i++) {
 		for (int j = 0; j < col; j++) {
 			cout << userData[i][j] << " ";
 		}
 		cout << endl;
 	}
-};
+}
+void Check::excuteCheck()
+{
+	cout << "예약번호\t스터디룸 번호\t날짜\t시작시간\t종료시간" << endl;
+	showReservationList();
+}
+;
 
