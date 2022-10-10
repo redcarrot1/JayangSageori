@@ -2,9 +2,10 @@
 
 using namespace std;
 
-vector<vector<string>> File::readSplit(){	//파일 읽어서 이차원 벡터에 집어넣어 return
+vector<vector<string>> File::readSplit(string path){	//파일 읽어서 이차원 벡터에 집어넣어 return
 	vector<vector<string>> data;
 	ifstream datafile;
+	datafile.open(path);
 	int i = 0;
 	while (1) {
 		string line;
@@ -53,8 +54,7 @@ vector<vector<string>>File::getAllUsers() {
 	catch(exception &e){
 		cout << e.what() << endl;
 	}
-	
-	return  readSplit();		//UserData 전체 return (한 행에 한 명씩)
+	return  readSplit(".\\resource\\userdata.txt");		//UserData 전체 return (한 행에 한 명씩)
 }
 	
 vector<string>File::getMetaData() {	
@@ -101,7 +101,7 @@ vector<vector<string>>File::getUserData(string id) {
 	catch (exception& e) {
 		cout << e.what() << endl;
 	}
-	return readSplit();	//해당 id를 가지는 유저의 예약 정보 전체 저장 벡터 return (한 행에 한 개)
+	return readSplit(".\\user\\" + id + ".txt");	//해당 id를 가지는 유저의 예약 정보 전체 저장 벡터 return (한 행에 한 개)
 }
 
 vector<vector<string>>File::getBooking(string date) {//예약을 하고자 날짜를 인자로 받습니다
@@ -118,7 +118,7 @@ vector<vector<string>>File::getBooking(string date) {//예약을 하고자 날�
 			file << "\n";
 		}
 	}
-	return readSplit(); //해당 날짜의 예약 정보 전체 저장 벡터 return (한 행에 한 스터디룸)
+	return readSplit(".\\book\\" + ymd + ".txt"); //해당 날짜의 예약 정보 전체 저장 벡터 return (한 행에 한 스터디룸)
 }
 
 void File::addNewUser(vector<string> newUser) {//새로운 user의 이름, 전화번호를 담고 있는 벡터

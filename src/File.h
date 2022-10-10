@@ -14,7 +14,7 @@ class File
 private:
 
 
-	static vector<vector<string>> readSplit();
+	static vector<vector<string>> readSplit(string path);
 
 public:
 	static void start();
