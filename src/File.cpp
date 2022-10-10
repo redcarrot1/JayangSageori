@@ -34,23 +34,20 @@ vector<vector<string>>File::getAllUsers() {
 		datafile.open(".\\resource\\userdata.txt");
 		if (!datafile.is_open())	throw NotExistFileException("userdata.txt");
 	}
-	catch(exception &e){
+	catch (exception& e) {
 		exceptionMannager(e);
 	}
-	int i = 0;
+	string line;
 	while (1) {
-		string line;
 		getline(datafile, line);
-		if (line == "")
-			break;
+		if (line == "")	break;
 		istringstream iss(line);
 		string str_buf;
+		vector<string> v;
 		while (getline(iss, str_buf, '\t')) {
-			vector<string> v;
-			data.push_back(v);
-			data[i].push_back(str_buf);
+			v.push_back(str_buf);
 		}
-		i++;
+		data.push_back(v);
 	}
 	datafile.close();
 	return  data;		//UserData 전체 return (한 행에 한 명씩)
