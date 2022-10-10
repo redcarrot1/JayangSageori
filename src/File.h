@@ -1,4 +1,5 @@
 #pragma once
+#include "ExceptionClass.h"
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -11,16 +12,11 @@ using namespace std;
 class File
 {
 private:
-	string userdata = ".\\resource\\userdata.txt";
-	string meta = ".\\resource\\meta.txt";
-	string booking = ".\\book\\";
-	string userid = ".\\user\\";
-	ifstream datafile;
 
-	static vector<vector<string>> readSplit();
+
+	static vector<vector<string>> readSplit(string path);
 
 public:
-	//File();//생성자
 	static void start();
 	static vector<vector<string>>getAllUsers();
 	static vector<string>getMetaData();
