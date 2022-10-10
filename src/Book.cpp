@@ -21,9 +21,10 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
 	bookFileData = File::getBooking(sdate);
 	userData = File::getUserData(userId);
 	cout << bookFileData.size();
+	cout << userData.size();
 }
 
-void Book::checkReservation(){
+bool Book::checkReservation(){
 	
 	try {
 		if ((startHour > endHour) || (startHour == endHour && startMin > endMin)) {
@@ -40,11 +41,14 @@ void Book::checkReservation(){
 			reservedIndex.push_back(i);
 		}
 	}
+	
 	if (reservedIndex.size() > 0) {
 		int start = *reservedIndex.begin();
 		int end = *reservedIndex.end();
 		cout << "[오류] date studyroomnumber 번 스터디룸 " << endl;
+		return false;
 	}
+	return true;
 
 }
 
@@ -61,4 +65,12 @@ void Book::updateBookfile()
 {
 	File::setUserData(userId, userData);
 	File::setBooking(sdate, bookFileData);
+}
+
+void Book::excuteBook()
+{
+	if (checkReservation()) {
+		updateBookFileData();
+		updateBookfile();
+	}
 }

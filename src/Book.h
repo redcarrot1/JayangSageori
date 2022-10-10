@@ -15,9 +15,10 @@ class Book
 public:
 	Book() = delete;
 	Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId);
-	void checkReservation();
+	bool checkReservation();
 	void updateBookFileData();
 	void updateBookfile();
+	void excuteBook();
 private:
 	string sdate;
 	string sRoomNumber;
