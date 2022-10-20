@@ -8,7 +8,13 @@
 #include "User.h"
 #include "WindowEnum.h"
 #include "Help.h"
-//#include "File.h"
+#include "File.h"
+#include "User.h"
+#include "SignIn.h"
+#include "SignUp.h"
+#include "Book.h"
+#include "Check.h"
+#include "List.h"
 
 using namespace std;
 
@@ -27,9 +33,13 @@ void printPrompt() {
 void windowMain(string &command, vector<string> &argv) {
     if (command == "signin") {
         vector<string> stdArgv = Convert2Standard::convertSign(argv);
+        user = SignIn::signin(stdArgv);
+        if (user.getRole() == "admin") window = Window::Admin;
+        else window = Window::User;
     }
     else if (command == "signup") {
-        vector<string> stdArgv = Convert2Standard::convertBook(argv);
+        vector<string> stdArgv = Convert2Standard::convertSign(argv);
+        SignUp::signup(stdArgv);
     }
     else if (command == "help") {
         Help::printHelp(window);
@@ -62,10 +72,15 @@ void windowUser(string &command, vector<string> &argv) {
 
 void windowUserBook(string &command, vector<string> &argv) {
     if (command == "book") {
-        window = Window::UserBook;
+        vector<string> stdArgv = Convert2Standard::convertBook(argv);
+        // string date, string roomID, string startTime, string endTime
+        Book book(stdArgv[0], stdArgv[1], stdArgv[2], stdArgv[3], to_string(user.getUserId()));
+        book.excuteBook();
     }
     else if (command == "search") {
-        window = Window::UserSearch;
+        vector<string> stdArgv = Convert2Standard::convertList(argv);
+        List list(stdArgv[0], to_string(user.getUserId()));
+        list.excuteList();
     }
     else if (command == "logout") {
         window = Window::Main;
@@ -126,17 +141,20 @@ void windowAdminSearch(string &command, vector<string> &argv) {
     }
 }
 
+string File::rootPath = "/Users/hongseungtaeg/Desktop/project/mycode/";
+
 int main() {
-    cout << "í”„ë¡œê·¸ëž¨ì„ ì‹œìž‘í•©ë‹ˆë‹¤." << endl;
-    //File::start();
+    cout << "ÇÁ·Î±×·¥À» ½ÃÀÛÇÕ´Ï´Ù." << endl;
+    cout << "³» ÇöÀç °æ·Î : " << fs::current_path() << std::endl; // test
+    File::start();
 
     vector<string> argv;
     vector<string> stdargv;
 
-    while (1) {
+    while (true) {
         string line;
         try {
-            while (1) {
+            while (true) {
                 printPrompt();
                 getline(cin, line);
 
@@ -144,6 +162,12 @@ int main() {
                 getline(cin, command);
                 argv = Parsing::split(command);
                 if (argv.size() == 0); // Exception
+
+                cout<<"=== µé¾î¿Â ¸í·É¾î === ( / ·Î ¸í·É¾î¿Í ÀÎÀÚ ±¸ºÐ)"<<endl;
+                for(string &arg:argv){
+                    cout<<arg<<" / ";
+                }
+                cout<<endl;
 
                 command = Convert2Standard::stdCommand(argv.at(0));
 
@@ -156,7 +180,7 @@ int main() {
             }
         }
         catch (exception &e) {
-            exceptionMannager(e); //ì˜¤ë¥˜ì— ëŒ€í•œ ì •ë³´
+            exceptionMannager(e); //¿À·ù¿¡ ´ëÇÑ Á¤º¸
         }
     }
 }

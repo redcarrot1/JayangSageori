@@ -1,73 +1,92 @@
 #include "Book.h"
 
-Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId)
-{
-	this->userId = userId;
-	stringstream ssInt(sRoomNumber); int roomNumberInt;	ssInt >> roomNumberInt; this->iRoomNumber = roomNumberInt;
-	string startHour = sUseStartTime.substr(0, 2); stringstream sStartHour(startHour); int hourStart; sStartHour >> hourStart; this->startHour = hourStart;
-	string startMinute = sUseStartTime.substr(2, 2); stringstream sStartMinute(startMinute); int minuteStart; sStartMinute >> minuteStart; this->startMin = minuteStart;
-	string endHour = sUseEndTime.substr(0, 2); stringstream sEndHour(endHour); int hourEnd; sEndHour >> hourEnd; this->endHour = hourEnd;
-	string endMinute = sUseEndTime.substr(2, 2); stringstream sEndMinute(endMinute);int minuteEnd; sEndMinute >> minuteEnd; this->endMin = minuteEnd;
-	sIndex = (this->startHour - 9) * 2;
-	eIndex = (this->endHour - 9) * 2;
-	if (this->startMin == 30) {
-		sIndex += 1;
-	}
-	if (this->endMin == 30) {
-		eIndex += 1;
-	}
-	sdate.erase(remove(sdate.begin(), sdate.end(), '-'),sdate.end());
-	this->sdate = sdate;
-	bookFileData = File::getBooking(sdate);
-	userData = File::getUserData(userId);
+Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId) {
+    this->userId = userId;
+    stringstream ssInt(sRoomNumber);
+    int roomNumberInt;
+    ssInt >> roomNumberInt;
+    this->iRoomNumber = roomNumberInt;
+    string startHour = sUseStartTime.substr(0, 2);
+    stringstream sStartHour(startHour);
+    int hourStart;
+    sStartHour >> hourStart;
+    this->startHour = hourStart;
+    string startMinute = sUseStartTime.substr(2, 2);
+    stringstream sStartMinute(startMinute);
+    int minuteStart;
+    sStartMinute >> minuteStart;
+    this->startMin = minuteStart;
+    string endHour = sUseEndTime.substr(0, 2);
+    stringstream sEndHour(endHour);
+    int hourEnd;
+    sEndHour >> hourEnd;
+    this->endHour = hourEnd;
+    string endMinute = sUseEndTime.substr(2, 2);
+    stringstream sEndMinute(endMinute);
+    int minuteEnd;
+    sEndMinute >> minuteEnd;
+    this->endMin = minuteEnd;
+    sIndex = (this->startHour - 9) * 2;
+    eIndex = (this->startMin - 9) * 2;
+    if (this->startMin == 30) {
+        sIndex += 1;
+    }
+    if (this->endMin == 30) {
+        eIndex += 1;
+    }
+    sdate.erase(remove(sdate.begin(), sdate.end(), '-'), sdate.end());
+    this->sdate = sdate;
+    cout << this->sdate << endl; //테스트 코드
+    bookFileData = File::getBooking(sdate);
+    userData = File::getUserData(userId);
+    cout << bookFileData.size() << endl; //테스트 코드
+    cout << userData.size() << endl; //테스트 코드
 }
 
-bool Book::checkReservation(){
-	try {
-		if ((startHour > endHour) || (startHour == endHour && startMin > endMin)) {
-			throw WrongRuleArgumentException(this->sUseEndTime, "예약 종료 시간은 예약 시작 시간보다 빨라질 수 없습니다.");
-		}
-	}
-	catch (exception& e) {
-		exceptionMannager(e);
-	}
-	//예약되어있는지 확인
-	int reservedIndex = 0;
-	for (int i = sIndex; i < eIndex; i++) {
-		if (bookFileData[iRoomNumber][i] != "0") {
-			reservedIndex = 1;
-		}
-	}
-	
-	if (reservedIndex != 0) {
-		cout << "이미 예약되어 있습니다." << endl;
-		return false;
-	}
-	return true;
+bool Book::checkReservation() {
+
+    try {
+        if ((startHour > endHour) || (startHour == endHour && startMin > endMin)) {
+            throw WrongRuleArgumentException(this->sUseEndTime, "예약 종료 시간은 예약 시작 시간보다 빨라질 수 없습니다.");
+        }
+    }
+    catch (exception &e) {
+        exceptionMannager(e);
+    }
+    //예약되어있는지 확인
+    vector<int> reservedIndex;
+    for (int i = sIndex; i < eIndex; i++) {
+        if (bookFileData[iRoomNumber][i] != "0") {
+            reservedIndex.push_back(i);
+        }
+    }
+
+    if (reservedIndex.size() > 0) {
+        int start = *reservedIndex.begin();
+        int end = *reservedIndex.end();
+        cout << "[오류] date studyroomnumber 번 스터디룸 " << endl;
+        return false;
+    }
+    return true;
 
 }
 
-void Book::updateBookFileData()
-{
-	vector<string> data = File::getMetaData();
-	cout << sIndex << endl;
-	cout << eIndex << endl;
-	for (int i = sIndex; i < eIndex; i++) {
-		bookFileData[iRoomNumber][i] = data[1];
-	}
-	userData[0].push_back(data[1] + "\t" + sdate + "\t" + sUseStartTime + "\t" + sUseEndTime + "\t" + sRoomNumber + "\n");
+void Book::updateBookFileData() {
+    vector<string> data = File::getMetaData();
+    for (int i = sIndex; i < eIndex; i++) {
+        bookFileData[iRoomNumber][i] = data[3];
+    }
+    userData[0].push_back(data[3] + "\t" + sdate + "\t" + sUseStartTime + "\t" + sUseEndTime + "\t" + sRoomNumber);
 }
 
-void Book::updateBookfile()
-{
-	File::setUserData(userId, userData);
-	File::setBooking(sdate, bookFileData);
+void Book::updateBookfile() {
+    File::setUserData(userId, userData);
+    File::setBooking(sdate, bookFileData);
 }
 
-void Book::excuteBook()
-{
-	if (checkReservation()) {
-		updateBookFileData();
-		updateBookfile();
-	}
+void Book::excuteBook() {
+    if (checkReservation()) {
+        updateBookFileData();
+        updateBookfile();
+    }
 }

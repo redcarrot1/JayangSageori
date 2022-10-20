@@ -11,6 +11,7 @@ private:
     string phone;
     string role; // 사용자면 user 또는 관리자면 admin, 나중에 enum으로 바꿀지도?
 public:
+    User() = default;
     User(int userId, string name, string phone); // 사용자용
     User(string name, string phone); // 관리자용
 

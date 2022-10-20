@@ -1,17 +1,20 @@
 #pragma once
+
 #include "File.h"
 #include "User.h"
 
-class List
-{
+class List {
 public:
-	List() = delete;
-	List(string sdate, string id);
-	void excuteList();
+    List() = delete;
+
+    List(string sdate, string id);
+
+    void excuteList();
+
 private:
-	string sdate;
-	string id;
-	vector<vector<string>> fileData;
+    string sdate;
+    string id;
+    vector<vector<string>> fileData;
 
 };
 

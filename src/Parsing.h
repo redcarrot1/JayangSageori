@@ -5,11 +5,10 @@
 
 using namespace std;
 
-class Parsing
-{
+class Parsing {
 public:
-	Parsing() = delete;
-	static vector<string>  split(string line);
-	
+    Parsing() = delete;
+
+    static vector<string> split(string line);
 };
 

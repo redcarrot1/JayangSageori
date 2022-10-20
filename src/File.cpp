@@ -4,244 +4,252 @@ using namespace std;
 namespace fs = filesystem;
 
 void File::start() {
-	//í”„ë¡œê·¸ë¨ ì‹œì‘ ì‹œ, ê° ë””ë ‰í† ë¦¬ ìƒì„± & meta.txt ì´ë™
-	if (!fs::exists("book")) {fs::create_directory("book");}
-	if(!fs::exists("user")){ fs::create_directory("user"); }
-	if (!fs::exists("resource")) { fs::create_directory("resource"); }
-	if (!fs::exists("resource\\userdata.txt")) { ofstream("resource\\userdata.txt"); }
-	if (fs::exists("meta.txt")) {
-		if (!fs::exists("resource\\meta.txt")) {
-			fs::copy("meta.txt", "resource\\meta.txt");
-		}
-		fs::remove("meta.txt");
-	}
-	else {
-		try {
-			if (!fs::exists("resource\\meta.txt"))	throw NotExistMetaFileException();
-		}
-		catch (exception& e) {
-			exceptionMannager(e);
-		}
-	}
+    //ÇÁ·Î±×·¥ ½ÃÀÛ ½Ã, °¢ µğ·ºÅä¸® »ı¼º & meta.txt ÀÌµ¿
+    if (!fs::exists(rootPath + "book")) { fs::create_directory(rootPath + "book"); }
+    if (!fs::exists(rootPath + "user")) { fs::create_directory(rootPath + "user"); }
+    if (!fs::exists(rootPath + "resource")) { fs::create_directory(rootPath + "resource"); }
+    if (!fs::exists(rootPath + "resource/userdata.txt")) { ofstream(rootPath + "resource/userdata.txt"); }
+    if (fs::exists(rootPath + "meta.txt")) {
+        if (!fs::exists(rootPath + "resource/meta.txt")) {
+            fs::copy(rootPath + "meta.txt", rootPath + "resource/meta.txt");
+        }
+        fs::remove(rootPath + "meta.txt");
+    }
+    else {
+        try {
+            if (!fs::exists(rootPath + "resource/meta.txt"))
+                throw NotExistMetaFileException();
+        }
+        catch (exception &e) {
+            exceptionMannager(e);
+        }
+    }
 }
 
-vector<vector<string>>File::getAllUsers() {
-	//userdata.txt
-	//UserData : userID, Name, phoneNum
-	vector<vector<string>> data;
-	ifstream datafile;
-	try {
-		datafile.open(".\\resource\\userdata.txt");
-		if (!datafile.is_open())	throw NotExistFileException("userdata.txt");
-	}
-	catch (exception& e) {
-		exceptionMannager(e);
-	}
-	string line;
-	while (1) {
-		getline(datafile, line);
-		if (line == "")	break;
-		istringstream iss(line);
-		string str_buf;
-		vector<string> v;
-		while (getline(iss, str_buf, '\t')) {
-			v.push_back(str_buf);
-		}
-		data.push_back(v);
-	}
-	datafile.close();
-	return  data;		//UserData ì „ì²´ return (í•œ í–‰ì— í•œ ëª…ì”©)
-}
-	
-vector<string>File::getMetaData() {	
-	//meta.txt
-	//ê´€ë¦¬ì ì´ë¦„, ì „í™”ë²ˆí˜¸, í˜„ì¬ íšŒì› ìˆ˜, ì˜ˆì•½ ë²ˆí˜¸ 
-	vector<string> data;
-	ifstream datafile;
-	try {
-		datafile.open(".\\resource\\meta.txt");
-		if (!datafile.is_open())	throw NotExistMetaFileException();
-	}
-	catch (exception &e) {
-		exceptionMannager(e);
-	}
-	while (1) {
-		string line;
-		getline(datafile, line);
-		if (line == "")
-			break;
-		istringstream iss(line);
-		string str_buf;
-		while (getline(iss, str_buf, '\t')) {
-			data.push_back(str_buf);
-		}
-	}
-	datafile.close();
-	return data;//ì •ë³´ 4ê°œë¥¼ ì €ì¥í•˜ëŠ” ë²¡í„° return
+vector<vector<string>> File::getAllUsers() {
+    //userdata.txt
+    //UserData : userID, Name, phoneNum
+    vector<vector<string>> data;
+    ifstream datafile;
+    try {
+        datafile.open(rootPath + "resource/userdata.txt");
+        if (!datafile.is_open())
+            throw NotExistFileException("userdata.txt");
+    }
+    catch (exception &e) {
+        exceptionMannager(e);
+    }
+    string line;
+    while (1) {
+        getline(datafile, line);
+        if (line == "") break;
+        istringstream iss(line);
+        string str_buf;
+        vector<string> v;
+        while (getline(iss, str_buf, '\t')) {
+            v.push_back(str_buf);
+        }
+        data.push_back(v);
+    }
+    datafile.close();
+    return data;        //UserData ÀüÃ¼ return (ÇÑ Çà¿¡ ÇÑ ¸í¾¿)
 }
 
-vector<vector<string>>File::getUserData(string id) {
-	//[UserID].txt
-	//user ì˜ˆì•½ ì •ë³´ : ì˜ˆì•½ë²ˆí˜¸/ì˜ˆì•½ë‚ ì§œ/ì‹œì‘ì‹œê°/ì¢…ë£Œì‹œê°/ë°©ë²ˆí˜¸
-	vector<vector<string>> data;
-	ifstream datafile;
-	try {
-		datafile.open(".\\user\\" + id + ".txt");
-		if (!datafile.is_open())	throw NotExistFileException(id + ".txt");
-	}
-	catch (exception& e) {
-		exceptionMannager(e);
-	}
-	string line;
-	while (1) {
-		getline(datafile, line);
-		if (line == "")	break;
-		istringstream iss(line);
-		string str_buf;
-		vector<string> v;
-		while (getline(iss, str_buf, '\t')) {
-			v.push_back(str_buf);
-		}
-		data.push_back(v);
-	}
-	datafile.close();
-	return data;	//í•´ë‹¹ idë¥¼ ê°€ì§€ëŠ” ìœ ì €ì˜ ì˜ˆì•½ ì •ë³´ ì „ì²´ ì €ì¥ ë²¡í„° return (í•œ í–‰ì— í•œ ê°œ)
+User File::getAdmin() {
+    vector<string> metaData = getMetaData();
+    return User(metaData[0], metaData[1]);
 }
 
-vector<vector<string>>File::getBooking(string date) {//ì˜ˆì•½ì„ í•˜ê³ ì ë‚ ì§œë¥¼ ì¸ìë¡œ ë°›ìŠµë‹ˆë‹¤
-	//[YYYYMMDD].txt
-	date.erase(remove(date.begin(), date.end(), '-'), date.end());//í‘œì¤€í˜•ì‹ìœ¼ë¡œë¶€í„° ë³€í™˜
-	ofstream file;
-	if (!fs::exists(".\\book\\" + date + ".txt")) {//ì°¾ì•„ë³´ê³  ì—†ìœ¼ë©´ íŒŒì¼ ìƒì„±(0ìœ¼ë¡œ ì´ˆê¸°í™”)
-		file.open(".\\book\\" + date + ".txt");
-		for (int i = 0; i < 9; i++) {//ë°© 9ê°œ
-			for (int j = 0; j < 22; j++) {//30ë¶„ ë‹¨ìœ„ë¡œ 22ì¹¸
-				file << "0\t";
-			}
-			file << "\n";
-		}
-		file.close();
-	}
-	ifstream datafile(".\\book\\" + date + ".txt");
-	vector<vector<string>> data;
-	string line;
-	while (1) {
-		getline(datafile, line);
-		if (line == "")	break;
-		istringstream iss(line);
-		string str_buf;
-		vector<string> v;
-		while (getline(iss, str_buf, '\t')) {
-			v.push_back(str_buf);
-		}
-		data.push_back(v);
-	}
-	datafile.close();
-	return data; //í•´ë‹¹ ë‚ ì§œì˜ ì˜ˆì•½ ì •ë³´ ì „ì²´ ì €ì¥ ë²¡í„° return (í•œ í–‰ì— í•œ ìŠ¤í„°ë””ë£¸)
+vector<string> File::getMetaData() {
+    //meta.txt
+    //°ü¸®ÀÚ ÀÌ¸§, ÀüÈ­¹øÈ£, ÇöÀç È¸¿ø ¼ö, ¿¹¾à ¹øÈ£
+    vector<string> data;
+    ifstream datafile;
+    try {
+        datafile.open(rootPath + "resource/meta.txt");
+        if (!datafile.is_open()) throw NotExistMetaFileException();
+    }
+    catch (exception &e) {
+        exceptionMannager(e);
+    }
+
+    while (1) {
+        string line;
+        getline(datafile, line);
+        if (line == "")
+            break;
+        istringstream iss(line);
+        string str_buf;
+        while (getline(iss, str_buf, '\t')) {
+            data.push_back(str_buf);
+        }
+    }
+    datafile.close();
+    return data;//Á¤º¸ 4°³¸¦ ÀúÀåÇÏ´Â º¤ÅÍ return
 }
 
-void File::addNewUser(vector<string> newUser) {//ìƒˆë¡œìš´ userì˜ ì´ë¦„, ì „í™”ë²ˆí˜¸ë¥¼ ë‹´ê³  ìˆëŠ” ë²¡í„°
-	ofstream file;
-	vector<string> metaData = getMetaData();
-	string num = "";
-	//meta.txt ìˆ˜ì •
-	try {	//metadata íŒŒì¼ format í™•ì¸
-		if (metaData.size() != 4)	throw WrongFormatMetaFileException();
-		num = to_string(stoi(metaData[2]) + 1);
-		metaData[2] = num;
-	}
-	catch (exception &e) {
-		exceptionMannager(e);
-	}
-	try {	//metadata íŒŒì¼ ì¡´ì¬ í™•ì¸
-		file.open(".\\resource\\meta.txt");
-		if (!file.is_open())	throw NotExistMetaFileException();
-		file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
-		file.close();
-	}
-	catch(exception &e){
-		exceptionMannager(e);
-	}
-
-	//[UserID].txt íŒŒì¼ ìƒì„±(ë¹ˆ íŒŒì¼)
-	file.open(".\\user\\" +num+".txt");
-	file.close();
-
-	//userdata.txt ë§ˆì§€ë§‰ì¤„ ì¶”ê°€
-	try {
-		string user = num + "\t" + newUser[0] + "\t" + newUser[1] + "\n";
-		file.open(".\\resource\\userdata.txt", std::ios_base::app);
-		if (!file.is_open())	throw NotExistFileException("userdata.txt");
-		file << user;
-		file.close();
-	}
-	catch (exception &e) {
-		exceptionMannager(e);
-	}
-	
+vector<vector<string>> File::getUserData(string id) {
+    //[UserID].txt
+    //user ¿¹¾à Á¤º¸ : ¿¹¾à¹øÈ£/¿¹¾à³¯Â¥/½ÃÀÛ½Ã°¢/Á¾·á½Ã°¢/¹æ¹øÈ£
+    vector<vector<string>> data;
+    ifstream datafile;
+    try {
+        datafile.open(rootPath + "user/" + id + ".txt");
+        if (!datafile.is_open()) throw NotExistFileException(id + ".txt");
+    }
+    catch (exception &e) {
+        exceptionMannager(e);
+    }
+    string line;
+    while (1) {
+        getline(datafile, line);
+        if (line == "") break;
+        istringstream iss(line);
+        string str_buf;
+        vector<string> v;
+        while (getline(iss, str_buf, '\t')) {
+            v.push_back(str_buf);
+        }
+        data.push_back(v);
+    }
+    datafile.close();
+    return data;    //ÇØ´ç id¸¦ °¡Áö´Â À¯ÀúÀÇ ¿¹¾à Á¤º¸ ÀüÃ¼ ÀúÀå º¤ÅÍ return (ÇÑ Çà¿¡ ÇÑ °³)
 }
 
-void File::setUserData(string id, vector<vector<string>> data) {//í•´ë‹¹ userì˜ ëª¨ë“  ì˜ˆì•½ ì •ë³´ë¥¼ ë‹´ì€ ë²¡í„°
-	//[UserId].txt
-	ofstream file;
-	try {
-		file.open(".\\user\\" + id + ".txt");
-		if (!file.is_open())	throw NotExistFileException(id + ".txt");
-	}
-	catch(exception &e){
-		exceptionMannager(e);
-	}
-	for (int i = 0; i < data.size(); i++) {
-		for (int j = 0; j < data[i].size(); j++) {
-			file << data[i][j] + "\t";
-		}
-		file << "\n";
-	}
-	file.close();
+vector<vector<string>> File::getBooking(string date) {//¿¹¾àÀ» ÇÏ°íÀÚ ³¯Â¥¸¦ ÀÎÀÚ·Î ¹Ş½À´Ï´Ù
+    //[YYYYMMDD].txt
+    date.erase(remove(date.begin(), date.end(), '-'), date.end());//Ç¥ÁØÇü½ÄÀ¸·ÎºÎÅÍ º¯È¯
+    ofstream file;
+    if (!fs::exists(rootPath + "book/" + date + ".txt")) {//Ã£¾Æº¸°í ¾øÀ¸¸é ÆÄÀÏ »ı¼º(0À¸·Î ÃÊ±âÈ­)
+        file.open(rootPath + "book/" + date + ".txt");
+        for (int i = 0; i < 9; i++) {//¹æ 9°³
+            for (int j = 0; j < 22; j++) {//30ºĞ ´ÜÀ§·Î 22Ä­
+                file << "0\t";
+            }
+            file << "\n";
+        }
+        file.close();
+    }
+    ifstream datafile(rootPath + "/book/" + date + ".txt");
+    vector<vector<string>> data;
+    string line;
+    while (1) {
+        getline(datafile, line);
+        if (line == "") break;
+        istringstream iss(line);
+        string str_buf;
+        vector<string> v;
+        while (getline(iss, str_buf, '\t')) {
+            v.push_back(str_buf);
+        }
+        data.push_back(v);
+    }
+    datafile.close();
+    return data; //ÇØ´ç ³¯Â¥ÀÇ ¿¹¾à Á¤º¸ ÀüÃ¼ ÀúÀå º¤ÅÍ return (ÇÑ Çà¿¡ ÇÑ ½ºÅÍµğ·ë)
 }
 
-void File::setBooking(string date, vector<vector<string>>data) {
-	//[YYYYMMDD].txt
-	//í•´ë‹¹ ë‚ ì§œì˜ ì˜ˆì•½ ì •ë³´ write
-	date.erase(remove(date.begin(), date.end(), '-'), date.end());//í‘œì¤€í˜•ì‹ìœ¼ë¡œë¶€í„° ë³€í™˜
-	ofstream file(".\\book\\" + date + ".txt");
-	if (!file.is_open()) {//ì°¾ì•„ë³´ê³  ì—†ìœ¼ë©´ íŒŒì¼ ìƒì„±(0ìœ¼ë¡œ ì´ˆê¸°í™”)
-		ofstream file(".\\book\\" + date + ".txt");
-		for (int i = 0; i < 9; i++) {//ë°© 9ê°œ
-			for (int j = 0; j < 22; j++) {//30ë¶„ ë‹¨ìœ„ë¡œ 22ì¹¸
-				file << "0\t";
-			}
-			file << "\n";
-		}
-	}
-	for (int i = 0; i < data.size(); i++) {
-		for (int j = 0; j < data[i].size(); j++) {
-			file << data[i][j] + "\t";
-		}
-		file << "\n";
-	}
-	file.close();
+void File::addNewUser(vector<string> newUser) { //»õ·Î¿î userÀÇ ÀÌ¸§, ÀüÈ­¹øÈ£¸¦ ´ã°í ÀÖ´Â º¤ÅÍ
+    ofstream file;
+    vector<string> metaData = getMetaData();
+    string num = "";
+    //meta.txt ¼öÁ¤
+    try {    //metadata ÆÄÀÏ format È®ÀÎ
+        if (metaData.size() != 4) throw WrongFormatMetaFileException();
+        num = to_string(stoi(metaData[2]) + 1);
+        metaData[2] = num;
+    }
+    catch (exception &e) {
+        exceptionMannager(e);
+    }
+    try {    //metadata ÆÄÀÏ Á¸Àç È®ÀÎ
+        file.open(rootPath + "resource/meta.txt");
+        if (!file.is_open()) throw NotExistMetaFileException();
+        file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
+        file.close();
+    }
+    catch (exception &e) {
+        exceptionMannager(e);
+    }
 
-	//meta ë°ì´í„°ì˜ ë§ˆì§€ë§‰ ì˜ˆì•½ ë²ˆí˜¸ ì¦ê°€
-	vector<string> metaData;
-	try {
-		metaData = getMetaData();
-		if (metaData.size() != 4)	throw WrongFormatMetaFileException();
-		metaData[3] = to_string(stoi(metaData[3]) + 1);
-		
-	}
-	catch (exception& e) {
-		exceptionMannager(e);
-	}
-	try {
-		file.open(".\\resource\\meta.txt");
-		if (!file.is_open())	throw NotExistMetaFileException();
-		file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
-		file.close();
-	}
-	catch (exception& e) {
-		exceptionMannager(e);
-	}
+    //[UserID].txt ÆÄÀÏ »ı¼º(ºó ÆÄÀÏ)
+    file.open(rootPath + "user" + num + ".txt");
+    file.close();
+
+    //userdata.txt ¸¶Áö¸·ÁÙ Ãß°¡
+    try {
+        string user = num + "\t" + newUser[0] + "\t" + newUser[1] + "\n";
+        file.open(rootPath + "resource/userdata.txt", std::ios_base::app);
+        if (!file.is_open()) throw NotExistFileException("userdata.txt");
+        file << user;
+        file.close();
+    }
+    catch (exception &e) {
+        exceptionMannager(e);
+    }
+
+}
+
+void File::setUserData(string id, vector<vector<string>> data) {//ÇØ´ç userÀÇ ¸ğµç ¿¹¾à Á¤º¸¸¦ ´ãÀº º¤ÅÍ
+    //[UserId].txt
+    ofstream file;
+    try {
+        file.open(rootPath + "/user/" + id + ".txt");
+        if (!file.is_open()) throw NotExistFileException(id + ".txt");
+    }
+    catch (exception &e) {
+        exceptionMannager(e);
+    }
+    for (int i = 0; i < data.size(); i++) {
+        for (int j = 0; j < data[i].size(); j++) {
+            file << data[i][j] + "\t";
+        }
+        file << "\n";
+    }
+    file.close();
+}
+
+void File::setBooking(string date, vector<vector<string>> data) {
+    //[YYYYMMDD].txt
+    //ÇØ´ç ³¯Â¥ÀÇ ¿¹¾à Á¤º¸ write
+    date.erase(remove(date.begin(), date.end(), '-'), date.end());//Ç¥ÁØÇü½ÄÀ¸·ÎºÎÅÍ º¯È¯
+    ofstream file(rootPath + "book" + date + ".txt");
+    if (!file.is_open()) {//Ã£¾Æº¸°í ¾øÀ¸¸é ÆÄÀÏ »ı¼º(0À¸·Î ÃÊ±âÈ­)
+        ofstream file(rootPath + "book" + date + ".txt");
+        for (int i = 0; i < 9; i++) {//¹æ 9°³
+            for (int j = 0; j < 22; j++) {//30ºĞ ´ÜÀ§·Î 22Ä­
+                file << "0\t";
+            }
+            file << "\n";
+        }
+    }
+    for (int i = 0; i < data.size(); i++) {
+        for (int j = 0; j < data[i].size(); j++) {
+            file << data[i][j] + "\t";
+        }
+        file << "\n";
+    }
+    file.close();
+
+    //meta µ¥ÀÌÅÍÀÇ ¸¶Áö¸· ¿¹¾à ¹øÈ£ Áõ°¡
+    vector<string> metaData;
+    try {
+        metaData = getMetaData();
+        if (metaData.size() != 4) throw WrongFormatMetaFileException();
+        metaData[3] = to_string(stoi(metaData[3]) + 1);
+
+    }
+    catch (exception &e) {
+        exceptionMannager(e);
+    }
+    try {
+        file.open(rootPath + "resource/meta.txt");
+        if (!file.is_open()) throw NotExistMetaFileException();
+        file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
+        file.close();
+    }
+    catch (exception &e) {
+        exceptionMannager(e);
+    }
 }
 
 
