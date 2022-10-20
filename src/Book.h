@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -10,35 +11,37 @@
 
 using namespace std;
 
-class Book
-{
-public:
-	Book() = delete;
-	Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId);
-	bool checkReservation();
-	void updateBookFileData();
-	void updateBookfile();
-	void excuteBook();
+class Book {
 private:
-	string sdate;
-	string sRoomNumber;
-	string sUseStartTime;
-	string sUseEndTime;
-	
-	int startIndex;
-	int endIndex;
+    string sdate;
+    string sRoomNumber;
+    string sUseStartTime;
+    string sUseEndTime;
 
-	string fDate;
-	int iRoomNumber;
-	int startHour;
-	int startMin;
-	int endHour;
-	int endMin;
-	
-	int sIndex, eIndex;
-	string userId;
-	vector<vector<string>> bookFileData;
-	vector<vector<string>> userData;
-	
+    int startIndex;
+    int endIndex;
+
+    string fDate;
+    int iRoomNumber;
+    int startHour;
+    int startMin;
+    int endHour;
+    int endMin;
+
+    int sIndex, eIndex;
+    string userId;
+    vector<vector<string>> bookFileData;
+    vector<vector<string>> userData;
+
+    bool checkReservation();
+
+    void updateBookFileData();
+
+    void updateBookfile();
+
+public:
+    Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId);
+
+    void excuteBook();
 };
 

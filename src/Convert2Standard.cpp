@@ -10,7 +10,7 @@ using namespace std;
 vector<string> Convert2Standard::split(string s, string pattern) {
     regex re(pattern);
     sregex_token_iterator it(s.begin(), s.end(), re, -1), end;
-    return vector<string>(it, end);
+    return {it, end};
 }
 
 /*표현 정의*/
@@ -331,7 +331,7 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
     }
     else if (argNum == 1) {
         bool numflag = false;  //숫자가 나타나면 true;
-        bool alphaflag = false; //영어가 나타마녀 true
+        bool alphaflag = false; //영어가 나타나면 true
         int index = 0;
         // 1개-1 길이 체크 : (2^50_)
         int length = argv.at(1).length();
@@ -428,7 +428,7 @@ string Convert2Standard::stdCommand(string command) {
         std.push_back(ch);
     }
     vector<string> commandList = {"back", "exit", "logout", "help", "signup", "signin", "book", "list", "check",
-                                  "logout", "ask"};
+                                  "logout", "ask", "search"};
     auto it = find(commandList.begin(), commandList.end(), std);
     if (it == commandList.end()) {
         throw WrongCommandException(command);

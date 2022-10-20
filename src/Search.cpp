@@ -1,14 +1,47 @@
-#include "SearchByPhoneNum.h"
+#include "Search.h"
 
-void SearchByPhoneNum::search(string phoneNum, string name) {
+void Search::searchAll() {
+    //파일에 저장돼있는 라인은 이미 표준 형식이므로 추가적인 변환 필요 X only 파싱만 필요함
+    vector<vector<string>> output = File::getAllUsers();
+
+    cout << "이름	전화번호" << endl;
+    for (int i = 0; i < output.size(); i++) {
+        for (int j = 1; j < 3; j++) {
+            cout << output[i][j] << "\t";
+        }
+        cout << endl;
+    }
+}
+
+void Search::searchByName(string name) {
+    vector<vector<string>> target = File::getAllUsers();
+    vector<int> location; //해당하는 사용자의 행 저장
+
+
+    for (int i = 0; i < target.size(); i++) {
+        if (target[i][1].compare(name) == 0) {
+            location.push_back(i);
+        }
+    }
+
+    cout << "이름	전화번호" << endl;
+    for (int i = 0; i < location.size(); i++) {
+        for (int j = 1; j < 3; j++) {
+            cout << target[location.at(i)][j] << "\t";
+        }
+        cout << endl;
+    }
+}
+
+
+void Search::searchByNameAndPhone(string name, string phone) {
     vector<vector<string>> info = File::getAllUsers();
     int location = -1, change; //해당하는 사용자의 행 저장
     string id; //사용자 아이디 저장
 
-
     try {
         for (int i = 0; i < info.size(); i++) {
-            if (info[i][2].compare(phoneNum) == 0) {
+            if (info[i][2].compare(phone) == 0) {
                 location = i;
                 id = info[i][0];
                 break;
@@ -66,4 +99,3 @@ void SearchByPhoneNum::search(string phoneNum, string name) {
     }
 
 }
-

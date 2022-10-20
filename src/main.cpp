@@ -9,12 +9,13 @@
 #include "WindowEnum.h"
 #include "Help.h"
 #include "File.h"
-#include "User.h"
 #include "SignIn.h"
 #include "SignUp.h"
 #include "Book.h"
 #include "Check.h"
 #include "List.h"
+#include "Search.h"
+#include "User.h"
 
 using namespace std;
 
@@ -34,7 +35,8 @@ void windowMain(string &command, vector<string> &argv) {
     if (command == "signin") {
         vector<string> stdArgv = Convert2Standard::convertSign(argv);
         user = SignIn::signin(stdArgv);
-        if (user.getRole() == "admin") window = Window::Admin;
+
+        if (user.isAdmin()) window = Window::Admin;
         else window = Window::User;
     }
     else if (command == "signup") {
@@ -73,17 +75,16 @@ void windowUser(string &command, vector<string> &argv) {
 void windowUserBook(string &command, vector<string> &argv) {
     if (command == "book") {
         vector<string> stdArgv = Convert2Standard::convertBook(argv);
-        // string date, string roomID, string startTime, string endTime
         Book book(stdArgv[0], stdArgv[1], stdArgv[2], stdArgv[3], to_string(user.getUserId()));
         book.excuteBook();
     }
-    else if (command == "search") {
+    else if (command == "list") {
         vector<string> stdArgv = Convert2Standard::convertList(argv);
         List list(stdArgv[0], to_string(user.getUserId()));
         list.excuteList();
     }
-    else if (command == "logout") {
-        window = Window::Main;
+    else if (command == "back") {
+        window = Window::User;
     }
     else if (command == "help") {
         Help::printHelp(window);
@@ -94,11 +95,9 @@ void windowUserBook(string &command, vector<string> &argv) {
 }
 
 void windowUserSearch(string &command, vector<string> &argv) {
-    if (command == "list") {
-
-    }
-    else if (command == "check") {
-        window = Window::User;
+    if (command == "check") {
+        Check check(to_string(user.getUserId()));
+        check.excuteCheck();
     }
     else if (command == "back") {
         window = Window::User;
@@ -113,7 +112,7 @@ void windowUserSearch(string &command, vector<string> &argv) {
 
 void windowAdmin(string &command, vector<string> &argv) {
     if (command == "search") {
-
+        window = Window::AdminSearch;
     }
     else if (command == "logout") {
         window = Window::User;
@@ -128,7 +127,10 @@ void windowAdmin(string &command, vector<string> &argv) {
 
 void windowAdminSearch(string &command, vector<string> &argv) {
     if (command == "ask") {
-
+        vector<string> stdArgv = Convert2Standard::convertSearch(argv);
+        if (stdArgv.size() == 1) Search::searchAll();
+        else if (stdArgv.size() == 2) Search::searchByName(stdArgv[1]);
+        else Search::searchByNameAndPhone(stdArgv[0], stdArgv[1]);
     }
     else if (command == "back") {
         window = Window::User;
@@ -152,22 +154,22 @@ int main() {
     vector<string> stdargv;
 
     while (true) {
-        string line;
         try {
             while (true) {
                 printPrompt();
-                getline(cin, line);
 
                 string command;
                 getline(cin, command);
                 argv = Parsing::split(command);
                 if (argv.size() == 0); // Exception
 
-                cout<<"=== 들어온 명령어 === ( / 로 명령어와 인자 구분)"<<endl;
-                for(string &arg:argv){
-                    cout<<arg<<" / ";
-                }
-                cout<<endl;
+                /*
+                    cout << "=== 들어온 명령어 === ( / 로 명령어와 인자 구분)" << endl;
+                    for (string &arg: argv) {
+                        cout << arg << " / ";
+                    }
+                    cout << "\n========================================" << endl;
+                */
 
                 command = Convert2Standard::stdCommand(argv.at(0));
 

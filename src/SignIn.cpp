@@ -6,7 +6,7 @@ User SignIn::signin(vector<string> v1) {
 
     User admin = File::getAdmin();
     if (admin.getName() == name && admin.getPhone() == phNum) {
-        cout << "관리자로 로그인 되었습니다.";
+        cout << "관리자로 로그인 되었습니다.\n";
         return admin;
     }
 
