@@ -12,6 +12,6 @@ using namespace std;
 class Search {
 public:
     static void searchAll();
-    static void searchByName(string name);
-    static void searchByNameAndPhone(string name, string phone);
+    static void searchByName(const string& name);
+    static void searchByNameAndPhone(const string& name, const string& phone);
 };

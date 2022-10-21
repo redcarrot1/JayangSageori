@@ -17,7 +17,7 @@ vector<string> Convert2Standard::split(string s, string pattern) {
 // ^: 이상, _: 이하
 string Convert2Standard::stdPhoneNum(string phoneNum) {
     // 1. 길이 확인 (7^20_)
-    int length = phoneNum.length();
+    size_t length = phoneNum.length();
     string std = "";
     if (length < 7 || 20 < length) {
         throw WrongLengthArgumentException(phoneNum, "7-20");
@@ -48,7 +48,7 @@ string Convert2Standard::stdPhoneNum(string phoneNum) {
 
 string Convert2Standard::stdName(string name) {
     // 1. 길이 확인 (2^30_)
-    int length = name.length();
+    size_t length = name.length();
     string std = "";
     if (length < 2 || 30 < length) {
         throw WrongLengthArgumentException(name, "2-30");
@@ -69,7 +69,7 @@ string Convert2Standard::stdName(string name) {
 
 string Convert2Standard::stdDate(string date) {
     // 1. 길이 확인 6^10_
-    int length = date.length();
+    size_t length = date.length();
     bool flag = false;
     string std = "";
     if (length < 6 || 10 < length) {
@@ -180,7 +180,7 @@ string Convert2Standard::correctTime(string stdtime) {
 
 string Convert2Standard::stdTime(string time) {
     // 1. 길이 확인 1^5_
-    int length = time.length();
+    size_t length = time.length();
     bool flag = false;
     string std = "";
     string correctstd = "";
@@ -262,7 +262,7 @@ string Convert2Standard::stdTime(string time) {
 
 string Convert2Standard::stdRoomID(string roomID) {
     //1. 길이확인 (1)
-    int length = roomID.length();
+    size_t length = roomID.length();
     string std = "";
     if (length != 1) {
         throw WrongLengthArgumentException(roomID, "1");
@@ -281,7 +281,7 @@ vector<string> Convert2Standard::convertSign(vector<string> argv) {
     // 인자 개수 반드시 2개
     // 첫번째 인자 : 이름, 두번째 인자 : 전화번호
     vector<string> returnArgv;
-    int argNum = argv.size() - 1;
+    size_t argNum = argv.size() - 1;
     if (argNum != 2) {
         throw WrongNumArgumentException("signup/in");
     }
@@ -294,7 +294,7 @@ vector<string> Convert2Standard::convertBook(vector<string> argv) {
     // 인자 개수 반드시 4개
     // 1.날짜, 2.방번호, 3,4.시간
     vector<string> returnArgv;
-    int argNum = argv.size() - 1;
+    size_t argNum = argv.size() - 1;
     if (argNum != 4) {
         throw WrongNumArgumentException("book");
     }
@@ -309,8 +309,10 @@ vector<string> Convert2Standard::convertList(vector<string> argv) {
     // 인자 개수 0개 또는 1개
     // 날짜
     vector<string> returnArgv;
-    int argNum = argv.size() - 1;
-    if (argNum == 1) {
+    size_t argNum = argv.size() - 1;
+
+    if (argNum == 0) return {};
+    else if (argNum == 1) {
         returnArgv.push_back(stdDate(argv.at(1)));
     }
     else {
@@ -325,16 +327,16 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
     string name;
     string phoneNum;
     vector<string> returnArgv;
-    int argNum = argv.size() - 1;
+    size_t argNum = argv.size() - 1;
     if (argNum == 0) {
-        return argv;
+        return {};
     }
     else if (argNum == 1) {
         bool numflag = false;  //숫자가 나타나면 true;
         bool alphaflag = false; //영어가 나타나면 true
         int index = 0;
         // 1개-1 길이 체크 : (2^50_)
-        int length = argv.at(1).length();
+        size_t length = argv.at(1).length();
         if (length < 2 || 50 < length) {
             throw WrongLengthArgumentException(argv.at(1), "2-50");
         }
@@ -413,7 +415,7 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
 
 //추가
 string Convert2Standard::stdCommand(string command) {
-    int length = command.length();
+    size_t length = command.length();
     string std;
     // 1. 길이 확인 (2^30_)
     // 2. 문자 확인 ([a-z]|[A-z])

@@ -1,47 +1,36 @@
 #include "Search.h"
 
 void Search::searchAll() {
-    //파일에 저장돼있는 라인은 이미 표준 형식이므로 추가적인 변환 필요 X only 파싱만 필요함
-    vector<vector<string>> output = File::getAllUsers();
-
-    cout << "이름	전화번호" << endl;
-    for (int i = 0; i < output.size(); i++) {
-        for (int j = 1; j < 3; j++) {
-            cout << output[i][j] << "\t";
-        }
-        cout << endl;
-    }
-}
-
-void Search::searchByName(string name) {
+    //UserData : userID, Name, phoneNum
     vector<vector<string>> target = File::getAllUsers();
-    vector<int> location; //해당하는 사용자의 행 저장
 
-
-    for (int i = 0; i < target.size(); i++) {
-        if (target[i][1].compare(name) == 0) {
-            location.push_back(i);
-        }
+    cout << "이름\t전화번호" << endl;
+    for (auto &userData: target) {
+        cout << userData[1] << "\t" << userData[2] << endl;
     }
+}
 
-    cout << "이름	전화번호" << endl;
-    for (int i = 0; i < location.size(); i++) {
-        for (int j = 1; j < 3; j++) {
-            cout << target[location.at(i)][j] << "\t";
+void Search::searchByName(const string& name) {
+    //UserData : userID, Name, phoneNum
+    vector<vector<string>> target = File::getAllUsers();
+
+    cout << "이름\t전화번호" << endl;
+    for (auto &userData: target) {
+        if (userData[1] == name) {
+            cout << userData[1] << "\t" << userData[2] << endl;
         }
-        cout << endl;
     }
 }
 
 
-void Search::searchByNameAndPhone(string name, string phone) {
-    vector<vector<string>> info = File::getAllUsers();
+void Search::searchByNameAndPhone(const string& name, const string& phone) {
+    vector<vector<string>> info = File::getAllUsers(); //userID, Name, phoneNum
     int location = -1, change; //해당하는 사용자의 행 저장
     string id; //사용자 아이디 저장
 
     try {
         for (int i = 0; i < info.size(); i++) {
-            if (info[i][2].compare(phone) == 0) {
+            if (info[i][2] == phone) {
                 location = i;
                 id = info[i][0];
                 break;
@@ -57,12 +46,12 @@ void Search::searchByNameAndPhone(string name, string phone) {
             }
         }
 
-        vector<vector<string>> userInfo = File::getUserData(id);// 사용자 정보 저장하는 곳
+        vector<vector<string>> userInfo = File::getUserData(id); // 예약번호 예약날짜 시작시각 종료시각 방번호
         time_t now, reserveat;
         time(&now);
 
         change = 0;
-        {//과거인지 판단하는 곳
+        {// TODO 과거인지 판단하는 곳
             for (int i = 0; i < userInfo.size(); i++) {
                 /*
                 tm reser(0, stoi(userInfo[i][2].substr(3, 2)), stoi(userInfo[i][2].substr(0, 2)),
@@ -78,7 +67,7 @@ void Search::searchByNameAndPhone(string name, string phone) {
         }
 
 
-        cout << "이름	전화번호" << endl;
+        cout << "이름\t전화번호" << endl;
         cout << info[location][1] << "\t" << info[location][2] << endl << endl;
         cout << "예약 현황" << endl << endl;
         cout << "예약 날짜" << "\t" << "이용 시간" << "\t" << "룸 번호" << "\t	" << "예약 번호" << endl << endl;

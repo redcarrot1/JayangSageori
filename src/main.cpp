@@ -44,7 +44,8 @@ void windowMain(string &command, vector<string> &argv) {
         SignUp::signup(stdArgv);
     }
     else if (command == "help") {
-        Help::printHelp(window);
+        if (argv.size() == 1) Help::printHelp(window);
+        else Help::printHelp(window, argv[1]);
     }
     else if (command == "exit") {
         cout << "프로그램을 종료합니다." << endl;
@@ -66,7 +67,8 @@ void windowUser(string &command, vector<string> &argv) {
         window = Window::Main;
     }
     else if (command == "help") {
-        Help::printHelp(window);
+        if (argv.size() == 1) Help::printHelp(window);
+        else Help::printHelp(window, argv[1]);
     }
     else {
         throw UnableCommandException(command, "User");
@@ -80,6 +82,7 @@ void windowUserBook(string &command, vector<string> &argv) {
         book.excuteBook();
     }
     else if (command == "list") {
+        // TODO 인자가 0인 경우 호출할 메소드가 없음
         vector<string> stdArgv = Convert2Standard::convertList(argv);
         List::excuteList(stdArgv[0]);
     }
@@ -87,7 +90,8 @@ void windowUserBook(string &command, vector<string> &argv) {
         window = Window::User;
     }
     else if (command == "help") {
-        Help::printHelp(window);
+        if (argv.size() == 1) Help::printHelp(window);
+        else Help::printHelp(window, argv[1]);
     }
     else {
         throw UnableCommandException(command, "Book");
@@ -102,7 +106,8 @@ void windowUserSearch(string &command, vector<string> &argv) {
         window = Window::User;
     }
     else if (command == "help") {
-        Help::printHelp(window);
+        if (argv.size() == 1) Help::printHelp(window);
+        else Help::printHelp(window, argv[1]);
     }
     else {
         throw UnableCommandException(command, "Search");
@@ -117,7 +122,8 @@ void windowAdmin(string &command, vector<string> &argv) {
         window = Window::Main;
     }
     else if (command == "help") {
-        Help::printHelp(window);
+        if (argv.size() == 1) Help::printHelp(window);
+        else Help::printHelp(window, argv[1]);
     }
     else {
         throw UnableCommandException(command, "Admin");
@@ -126,22 +132,26 @@ void windowAdmin(string &command, vector<string> &argv) {
 
 void windowAdminSearch(string &command, vector<string> &argv) {
     if (command == "ask") {
+        // TODO 전화번호만 입력되었을 때 호출할 메소드가 구현 안됨
         vector<string> stdArgv = Convert2Standard::convertSearch(argv);
-        if (stdArgv.size() == 1) Search::searchAll();
-        else if (stdArgv.size() == 2) Search::searchByName(stdArgv[1]);
+        if (stdArgv.empty()) Search::searchAll();
+        else if (stdArgv.size() == 1) Search::searchByName(stdArgv[0]);
         else Search::searchByNameAndPhone(stdArgv[0], stdArgv[1]);
     }
     else if (command == "back") {
         window = Window::Admin;
     }
     else if (command == "help") {
-        Help::printHelp(window);
+        if (argv.size() == 1) Help::printHelp(window);
+        else Help::printHelp(window, argv[1]);
     }
     else {
         throw UnableCommandException(command, "Search");
     }
 }
 
+// 데이터 파일이 저장되어 있는 폴더로 경로 지정하시면 됩니다.
+// 예를 들어, /kim/desktop/  으로 설정하시면, 해당 폴더 내에 book 폴더, resource 폴더, user 폴더가 있어야 합니다.
 string File::rootPath = "/Users/hongseungtaeg/Desktop/project/mycode/";
 
 int main() {
@@ -160,15 +170,7 @@ int main() {
                 string command;
                 getline(cin, command);
                 argv = Parsing::split(command);
-                if (argv.size() == 0); // Exception
-
-                /*
-                    cout << "=== 들어온 명령어 === ( / 로 명령어와 인자 구분)" << endl;
-                    for (string &arg: argv) {
-                        cout << arg << " / ";
-                    }
-                    cout << "\n========================================" << endl;
-                */
+                if (argv.empty()) continue;
 
                 command = Convert2Standard::stdCommand(argv.at(0));
 
