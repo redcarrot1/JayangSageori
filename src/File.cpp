@@ -17,6 +17,7 @@ void File::start() {
     }
     else {
         try {
+            cout << "meta.txt 이(가) 존재하는지 확인합니다." << endl;
             if (!fs::exists(rootPath + "resource/meta.txt"))
                 throw NotExistMetaFileException();
         }
@@ -57,7 +58,7 @@ vector<vector<string>> File::getAllUsers() {
 
 User File::getAdmin() {
     vector<string> metaData = getMetaData();
-    return User(metaData[0], metaData[1]);
+    return {metaData[0], metaData[1]};
 }
 
 vector<string> File::getMetaData() {
@@ -172,7 +173,7 @@ void File::addNewUser(vector<string> newUser) { //새로운 user의 이름, 전화번호를
     }
 
     //[UserID].txt 파일 생성(빈 파일)
-    file.open(rootPath + "user" + num + ".txt");
+    file.open(rootPath + "user/" + num + ".txt");
     file.close();
 
     //userdata.txt 마지막줄 추가
@@ -193,7 +194,7 @@ void File::setUserData(string id, vector<vector<string>> data) {//해당 user의 모
     //[UserId].txt
     ofstream file;
     try {
-        file.open(rootPath + "/user/" + id + ".txt");
+        file.open(rootPath + "user/" + id + ".txt");
         if (!file.is_open()) throw NotExistFileException(id + ".txt");
     }
     catch (exception &e) {
@@ -212,9 +213,9 @@ void File::setBooking(string date, vector<vector<string>> data) {
     //[YYYYMMDD].txt
     //해당 날짜의 예약 정보 write
     date.erase(remove(date.begin(), date.end(), '-'), date.end());//표준형식으로부터 변환
-    ofstream file(rootPath + "book" + date + ".txt");
+    ofstream file(rootPath + "book/" + date + ".txt");
     if (!file.is_open()) {//찾아보고 없으면 파일 생성(0으로 초기화)
-        ofstream file(rootPath + "book" + date + ".txt");
+        ofstream file(rootPath + "book/" + date + ".txt");
         for (int i = 0; i < 9; i++) {//방 9개
             for (int j = 0; j < 22; j++) {//30분 단위로 22칸
                 file << "0\t";

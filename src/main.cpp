@@ -47,7 +47,8 @@ void windowMain(string &command, vector<string> &argv) {
         Help::printHelp(window);
     }
     else if (command == "exit") {
-        exit(0);
+        cout << "프로그램을 종료합니다." << endl;
+        exit(EXIT_SUCCESS);
     }
     else {
         throw UnableCommandException(command, "Main");
@@ -75,13 +76,12 @@ void windowUser(string &command, vector<string> &argv) {
 void windowUserBook(string &command, vector<string> &argv) {
     if (command == "book") {
         vector<string> stdArgv = Convert2Standard::convertBook(argv);
-        Book book(stdArgv[0], stdArgv[1], stdArgv[2], stdArgv[3], to_string(user.getUserId()));
+        Book book(stdArgv[0], stdArgv[1], stdArgv[2], stdArgv[3], user.getUserId());
         book.excuteBook();
     }
     else if (command == "list") {
         vector<string> stdArgv = Convert2Standard::convertList(argv);
-        List list(stdArgv[0], to_string(user.getUserId()));
-        list.excuteList();
+        List::excuteList(stdArgv[0]);
     }
     else if (command == "back") {
         window = Window::User;
@@ -96,8 +96,7 @@ void windowUserBook(string &command, vector<string> &argv) {
 
 void windowUserSearch(string &command, vector<string> &argv) {
     if (command == "check") {
-        Check check(to_string(user.getUserId()));
-        check.excuteCheck();
+        Check::excuteCheck(user.getUserId());
     }
     else if (command == "back") {
         window = Window::User;
@@ -115,7 +114,7 @@ void windowAdmin(string &command, vector<string> &argv) {
         window = Window::AdminSearch;
     }
     else if (command == "logout") {
-        window = Window::User;
+        window = Window::Main;
     }
     else if (command == "help") {
         Help::printHelp(window);
@@ -133,7 +132,7 @@ void windowAdminSearch(string &command, vector<string> &argv) {
         else Search::searchByNameAndPhone(stdArgv[0], stdArgv[1]);
     }
     else if (command == "back") {
-        window = Window::User;
+        window = Window::Admin;
     }
     else if (command == "help") {
         Help::printHelp(window);
@@ -147,7 +146,7 @@ string File::rootPath = "/Users/hongseungtaeg/Desktop/project/mycode/";
 
 int main() {
     cout << "프로그램을 시작합니다." << endl;
-    cout << "내 현재 경로 : " << fs::current_path() << std::endl; // test
+    cout << "Test_내 현재 경로 : " << fs::current_path() << std::endl;
     File::start();
 
     vector<string> argv;

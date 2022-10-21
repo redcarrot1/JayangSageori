@@ -3,15 +3,15 @@
 
 using namespace std;
 
-User::User(int userId, string name, string phone) : userId(userId), name(name), phone(phone), role("user") {
+User::User(string userId, string name, string phone) : userId(userId), name(name), phone(phone), role("user") {
 
 }
 
-User::User(string name, string phone) : userId(0), name(name), phone(phone), role("admin") {
+User::User(string name, string phone) : userId(""), name(name), phone(phone), role("admin") {
 
 }
 
-int User::getUserId() {
+string User::getUserId() {
     return this->userId;
 }
 

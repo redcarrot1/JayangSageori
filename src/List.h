@@ -5,12 +5,7 @@
 
 class List {
 public:
-    List(string sdate, string id);
+    List() = delete;
 
-    void excuteList();
-
-private:
-    string sdate;
-    string id;
-    vector<vector<string>> fileData;
+    static void excuteList(string sdate);
 };

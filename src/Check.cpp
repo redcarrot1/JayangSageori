@@ -1,12 +1,9 @@
 #include "Check.h"
 
-Check::Check(string userid) {
-    this->userData = File::getUserData(userid);
-}
-
-void Check::showReservationList() {
-    int row = userData.size();
-    int col = userData[0].size();
+void Check::showReservationList(string userId) {
+    vector<vector<string>> userData = File::getUserData(std::move(userId));
+    size_t row = userData.size();
+    size_t col = userData[0].size();
 
     //getUserData에서 데이터를 읽어오지 못해서 발생하는 에러입니다.
     /* Test Code
@@ -23,8 +20,8 @@ void Check::showReservationList() {
     }
 }
 
-void Check::excuteCheck() {
+void Check::excuteCheck(string userId) {
     cout << "예약번호\t스터디룸 번호\t날짜\t시작시간\t종료시간" << endl;
-    showReservationList();
+    showReservationList(std::move(userId));
 };
 

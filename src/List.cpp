@@ -1,21 +1,11 @@
 #include "List.h"
 
-List::List(string sdate, string id) {
-    this->sdate = sdate;
-    this->id = id;
+void List::excuteList(string sdate) {
     sdate.erase(remove(sdate.begin(), sdate.end(), '-'), sdate.end());
-    this->sdate = sdate;
-    this->fileData = File::getBooking(this->sdate);
+    vector<vector<string>> fileData = File::getBooking(sdate);
 
-    /* Test Code
-    cout << sdate << endl;
-    cout << this->sdate;
-    */
-}
-
-void List::excuteList() {
-    int row = fileData.size();
-    int col = fileData[0].size();
+    size_t row = fileData.size();
+    size_t col = fileData[0].size();
 
     /* Test Code
     cout << row << endl;
