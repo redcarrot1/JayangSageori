@@ -1,4 +1,4 @@
-ï»¿#include "SignUp.h"
+#include "SignUp.h"
 #include "File.h"
 #include <string>
 
@@ -8,14 +8,24 @@ void SignUp::signup(vector<string> argv) {
     string name = argv[0];
     string phNum = argv[1];
 
-    vector<vector<string>> users = File::getAllUsers();
-    for (vector<string> &user: users) {
-        if (user[1] == name && user[2] == phNum)
-            throw WrongRuleArgumentException(user[0], "ì´ë¯¸ íšŒì›ê°€ì…ì´ ë˜ì–´ìˆëŠ” íšŒì›ì…ë‹ˆë‹¤."); // TODO
-    }
+    validPhone(phNum);
 
     File::addNewUser(argv);
-    cout << "íšŒì›ê°€ì…ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤." << endl;
-    cout << "ì‚¬ìš©ì ì´ë¦„: " << name << endl;
-    cout << "ì‚¬ìš©ì ì „í™”ë²ˆí˜¸: " << phNum << endl;
+    cout << "È¸¿ø°¡ÀÔÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù." << endl;
+    cout << "»ç¿ëÀÚ ÀÌ¸§: " << name << endl;
+    cout << "»ç¿ëÀÚ ÀüÈ­¹øÈ£: " << phNum << endl;
+}
+
+void SignUp::validPhone(const string& phoneNum) {
+    // 1. »ç¿ëÀÚ Áßº¹ °ËÁõ
+    vector<vector<string>> users = File::getAllUsers();
+    for (vector<string> &user: users) {
+        if (user[2] == phoneNum)
+            throw WrongRuleArgumentException(phoneNum, "ÀÌ¹Ì È¸¿ø°¡ÀÔÀÌ µÇ¾îÀÖ´Â ÀüÈ­¹øÈ£ÀÔ´Ï´Ù.");
+    }
+
+    // 2. °ü¸®ÀÚ °ËÁõ
+    User admin = File::getAdmin();
+    if (admin.getPhone() == phoneNum)
+        throw WrongRuleArgumentException(phoneNum, "ÀÌ¹Ì È¸¿ø°¡ÀÔÀÌ µÇ¾îÀÖ´Â ÀüÈ­¹øÈ£ÀÔ´Ï´Ù.");
 }
