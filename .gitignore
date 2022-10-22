@@ -1,1 +1,5 @@
+cmake-build-debug/**
+
+CMakeLists.txt
+
 **/.DS_Store

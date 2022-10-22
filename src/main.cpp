@@ -45,7 +45,8 @@ void windowMain(string &command, vector<string> &argv) {
     }
     else if (command == "help") {
         if (argv.size() == 1) Help::printHelp(window);
-        else Help::printHelp(window, argv[1]);
+        else if (argv.size() == 2) Help::printHelp(window, argv[1]);
+        else throw WrongNumArgumentException("help");
     }
     else if (command == "exit") {
         cout << "프로그램을 종료합니다." << endl;
@@ -68,7 +69,8 @@ void windowUser(string &command, vector<string> &argv) {
     }
     else if (command == "help") {
         if (argv.size() == 1) Help::printHelp(window);
-        else Help::printHelp(window, argv[1]);
+        else if (argv.size() == 2) Help::printHelp(window, argv[1]);
+        else throw WrongNumArgumentException("help");
     }
     else {
         throw UnableCommandException(command, "User");
@@ -91,7 +93,8 @@ void windowUserBook(string &command, vector<string> &argv) {
     }
     else if (command == "help") {
         if (argv.size() == 1) Help::printHelp(window);
-        else Help::printHelp(window, argv[1]);
+        else if (argv.size() == 2) Help::printHelp(window, argv[1]);
+        else throw WrongNumArgumentException("help");
     }
     else {
         throw UnableCommandException(command, "Book");
@@ -107,7 +110,8 @@ void windowUserSearch(string &command, vector<string> &argv) {
     }
     else if (command == "help") {
         if (argv.size() == 1) Help::printHelp(window);
-        else Help::printHelp(window, argv[1]);
+        else if (argv.size() == 2) Help::printHelp(window, argv[1]);
+        else throw WrongNumArgumentException("help");
     }
     else {
         throw UnableCommandException(command, "Search");
@@ -123,7 +127,8 @@ void windowAdmin(string &command, vector<string> &argv) {
     }
     else if (command == "help") {
         if (argv.size() == 1) Help::printHelp(window);
-        else Help::printHelp(window, argv[1]);
+        else if (argv.size() == 2) Help::printHelp(window, argv[1]);
+        else throw WrongNumArgumentException("help");
     }
     else {
         throw UnableCommandException(command, "Admin");
@@ -132,7 +137,6 @@ void windowAdmin(string &command, vector<string> &argv) {
 
 void windowAdminSearch(string &command, vector<string> &argv) {
     if (command == "ask") {
-        // TODO 전화번호만 입력되었을 때 호출할 메소드가 구현 안됨
         vector<string> stdArgv = Convert2Standard::convertSearch(argv);
         if (stdArgv.empty()) Search::searchAll();
         else if (stdArgv.size() == 1) Search::searchByName(stdArgv[0]);
@@ -143,7 +147,8 @@ void windowAdminSearch(string &command, vector<string> &argv) {
     }
     else if (command == "help") {
         if (argv.size() == 1) Help::printHelp(window);
-        else Help::printHelp(window, argv[1]);
+        else if (argv.size() == 2) Help::printHelp(window, argv[1]);
+        else throw WrongNumArgumentException("help");
     }
     else {
         throw UnableCommandException(command, "Search");
