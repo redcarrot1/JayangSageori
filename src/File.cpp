@@ -123,7 +123,7 @@ vector<vector<string>> File::getBooking(string date) {//예약을 하고자 날짜를 인�
     ofstream file;
     if (!fs::exists(rootPath + "book/" + date + ".txt")) {//찾아보고 없으면 파일 생성(0으로 초기화)
         file.open(rootPath + "book/" + date + ".txt");
-        for (int i = 0; i < 9; i++) {//방 9개
+        for (int i = 0; i < 10; i++) {//방 9개
             for (int j = 0; j < 22; j++) {//30분 단위로 22칸
                 file << "0\t";
             }
@@ -216,7 +216,7 @@ void File::setBooking(string date, vector<vector<string>> data) {
     ofstream file(rootPath + "book/" + date + ".txt");
     if (!file.is_open()) {//찾아보고 없으면 파일 생성(0으로 초기화)
         ofstream file(rootPath + "book/" + date + ".txt");
-        for (int i = 0; i < 9; i++) {//방 9개
+        for (int i = 0; i < 10; i++) {//방 9개
             for (int j = 0; j < 22; j++) {//30분 단위로 22칸
                 file << "0\t";
             }
