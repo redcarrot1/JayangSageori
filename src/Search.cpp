@@ -14,10 +14,10 @@ void Search::searchByName(const string& name) {
     //UserData : userID, Name, phoneNum
     vector<vector<string>> target = File::getAllUsers();
 
-    cout << "이름\t전화번호" << endl;
+    cout << "이름\t\t전화번호" << endl;
     for (auto &userData: target) {
         if (userData[1] == name) {
-            cout << userData[1] << "\t" << userData[2] << endl;
+            cout << userData[1] << "\t\t" << userData[2] << endl;
         }
     }
 }
@@ -53,7 +53,7 @@ void Search::searchByNameAndPhone(const string& name, const string& phone) {
         change = 0;
         {// TODO 과거인지 판단하는 곳
             for (int i = 0; i < userInfo.size(); i++) {
-                /*
+                
                 tm reser(0, stoi(userInfo[i][2].substr(3, 2)), stoi(userInfo[i][2].substr(0, 2)),
                          stoi(userInfo[i][1].substr(8, 2)), stoi(userInfo[i][1].substr(5, 2)) - 1,
                          stoi(userInfo[i][1].substr(0, 4)) - 1900);
@@ -61,7 +61,7 @@ void Search::searchByNameAndPhone(const string& name, const string& phone) {
                     change = i;
                     break;
                 }
-                 */
+                 
             }
 
         }
