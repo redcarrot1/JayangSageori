@@ -3,11 +3,12 @@
 Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId) {
     this->userId = userId;
     stringstream ssInt(sRoomNumber);
-
+    this->sRoomNumber = sRoomNumber;
     int roomNumberInt;
     ssInt >> roomNumberInt;
     this->iRoomNumber = roomNumberInt;
-
+    this->sUseStartTime = sUseStartTime;
+    this->sUseEndTime = sUseEndTime;
     string startHour = sUseStartTime.substr(0, 2);
     stringstream sStartHour(startHour);
 
@@ -36,7 +37,7 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
     sEndMinute >> minuteEnd;
     this->endMin = minuteEnd;
     sIndex = (this->startHour - 9) * 2;
-    eIndex = (this->startMin - 9) * 2;
+    eIndex = (this->endHour - 9) * 2;
     if (this->startMin == 30) {
         sIndex += 1;
     }
@@ -49,20 +50,9 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
 
     bookFileData = File::getBooking(sdate);
     userData = File::getUserData(userId);
-
-    /* Test Code
-    cout << this->sdate << endl;
-    cout << bookFileData.size() << endl;
-    cout << userData.size() << endl;
-     */
 }
 
-void Book::excuteBook() {
-    if (checkReservation()) {
-        updateBookFileData();
-        updateBookfile();
-    }
-}
+
 
 
 bool Book::checkReservation() {
@@ -95,13 +85,28 @@ bool Book::checkReservation() {
 
 void Book::updateBookFileData() {
     vector<string> data = File::getMetaData();
+
     for (int i = sIndex; i < eIndex; i++) {
         bookFileData[iRoomNumber][i] = data[3];
     }
-    userData[0].push_back(data[3] + "\t" + sdate + "\t" + sUseStartTime + "\t" + sUseEndTime + "\t" + sRoomNumber);
+
+    vector<string> newData;
+    newData.push_back(data[3]);
+    newData.push_back(sdate);
+    newData.push_back(sUseStartTime);
+    newData.push_back(sUseEndTime);
+    newData.push_back(sRoomNumber);
+    userData.push_back(newData);
 }
 
 void Book::updateBookfile() {
     File::setUserData(userId, userData);
     File::setBooking(sdate, bookFileData);
+}
+
+void Book::excuteBook() {
+    if (checkReservation()) {
+        updateBookFileData();
+        updateBookfile();
+    }
 }
