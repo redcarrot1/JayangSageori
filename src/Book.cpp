@@ -45,14 +45,13 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
         eIndex += 1;
     }
 
+    this->sOriginDate = sdate;
     sdate.erase(remove(sdate.begin(), sdate.end(), '-'), sdate.end());
     this->sdate = sdate;
 
     bookFileData = File::getBooking(sdate);
     userData = File::getUserData(userId);
 }
-
-
 
 
 bool Book::checkReservation() {
@@ -75,10 +74,12 @@ bool Book::checkReservation() {
 
     if (reservedIndex.size() > 0) {
         int start = reservedIndex[0];
-        int end = reservedIndex[reservedIndex.size()-1];
+        int end = reservedIndex[reservedIndex.size() - 1];
 
 
-        cout << "[오류] "<< sdate << " " << sRoomNumber << "번의" << reservedIndex[0] << " ~ " << reservedIndex[reservedIndex.size()-1] << "시간은 이미 예약이 되어있습니다." << endl;        return false;
+        cout << "[오류] " << sOriginDate << " " << sRoomNumber << "번 스터디룸 " << this->sUseStartTime << " ~ "
+             << this->sUseEndTime << "는 예약 불가능한 상태입니다." << endl;
+        return false;
     }
 
     return true;
@@ -109,6 +110,7 @@ void Book::excuteBook() {
     if (checkReservation()) {
         updateBookFileData();
         updateBookfile();
-        cout << "예약이 정상적으로 완료되었습니다." << endl;
+        cout << this->sOriginDate << " " << this->sRoomNumber << "번 스터디룸 " << this->sUseStartTime << " ~ "
+             << this->sUseEndTime << " 로 정상 예약되었습니다." << endl;
     }
 }

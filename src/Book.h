@@ -14,6 +14,7 @@ using namespace std;
 class Book {
 private:
     string sdate;
+    string sOriginDate;
     string sRoomNumber;
     string sUseStartTime;
     string sUseEndTime;
