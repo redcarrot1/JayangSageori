@@ -64,7 +64,7 @@ void Help::printHelp(Window window, const string &command) {
             commandDetailTemplate("signin", "도움말을 출력합니다.", {"1 2"}, {"사용자 이름을 입력합니다.", "사용자 전화번호를 입력합니다."});
         else if (command == "exit")
             commandDetailTemplate("exit", "프로그램을 종료합니다.", {}, {});
-        else throw UnableCommandException(command, "command");
+        else throw UnableCommandException(command, window, "command");
     }
     else if (window == Window::User) {
         if (command == "help")
@@ -75,7 +75,7 @@ void Help::printHelp(Window window, const string &command) {
             commandDetailTemplate("book", "스터디룸 예약을 진행하는 명령창으로 이동합니다.", {}, {});
         else if (command == "search")
             commandDetailTemplate("search", "회원님의 예약 현황을 확인할 수 있는 명령창으로 이동합니다.", {}, {});
-        else throw UnableCommandException(command, "command");
+        else throw UnableCommandException(command, window, "command");
     }
     else if (window == Window::UserBook) {
         if (command == "help")
@@ -89,7 +89,7 @@ void Help::printHelp(Window window, const string &command) {
         else if (command == "list")
             commandDetailTemplate("list", "스터디룸의 예약 현황을 출력합니다..", {"", "1"},
                                   {"스터디룸의 예약 현황을 확인할 날짜를 입력합니다."});
-        else throw UnableCommandException(command, "command");
+        else throw UnableCommandException(command, window, "command");
     }
     else if (window == Window::UserSearch) {
         if (command == "help")
@@ -98,7 +98,7 @@ void Help::printHelp(Window window, const string &command) {
             commandDetailTemplate("back", "사용자 명령창으로 이동합니다.", {}, {});
         else if (command == "check")
             commandDetailTemplate("check", "사용자의 예약된 스터디룸을 출력합니다.", {}, {});
-        else throw UnableCommandException(command, "command");
+        else throw UnableCommandException(command, window, "command");
     }
     else if (window == Window::Admin) {
         if (command == "help")
@@ -107,7 +107,7 @@ void Help::printHelp(Window window, const string &command) {
             commandDetailTemplate("logout", "로그아웃 후 메인 명령창으로 이동합니다.", {}, {});
         else if (command == "search")
             commandDetailTemplate("search", "회원 검색을 할 수 있는 명령창으로 이동합니다.", {}, {});
-        else throw UnableCommandException(command, "command");
+        else throw UnableCommandException(command, window, "command");
     }
     else if (window == Window::AdminSearch) {
         if (command == "help")
@@ -118,7 +118,7 @@ void Help::printHelp(Window window, const string &command) {
             commandDetailTemplate("ask", "회원 정보를 조회합니다.", {"", "1", "2", "1 2", "2 1", "3"},
                                   {"검색할 이름을 입력합니다.", "검색할 전화번호를 입력합니다.",
                                    "검색할 이름과 전화번호를 두 개의 순서 고려를 하지 않고, 공백없이 연속적으로 입력합니다."});
-        else throw UnableCommandException(command, "command");
+        else throw UnableCommandException(command, window, "command");
     }
 }
 

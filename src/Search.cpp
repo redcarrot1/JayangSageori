@@ -10,7 +10,7 @@ void Search::searchAll() {
     }
 }
 
-void Search::searchByName(const string& name) {
+void Search::searchByName(const string &name) {
     //UserData : userID, Name, phoneNum
     vector<vector<string>> target = File::getAllUsers();
 
@@ -23,7 +23,7 @@ void Search::searchByName(const string& name) {
 }
 
 
-void Search::searchByNameAndPhone(const string& name, const string& phone) {
+void Search::searchByNameAndPhone(const string &name, const string &phone) {
     vector<vector<string>> info = File::getAllUsers(); //userID, Name, phoneNum
     int location = -1, change; //해당하는 사용자의 행 저장
     string id; //사용자 아이디 저장
@@ -53,15 +53,15 @@ void Search::searchByNameAndPhone(const string& name, const string& phone) {
         change = 0;
         {// TODO 과거인지 판단하는 곳
             for (int i = 0; i < userInfo.size(); i++) {
-                
-                tm reser(0, stoi(userInfo[i][2].substr(3, 2)), stoi(userInfo[i][2].substr(0, 2)),
+
+                tm reser({0, stoi(userInfo[i][2].substr(3, 2)), stoi(userInfo[i][2].substr(0, 2)),
                          stoi(userInfo[i][1].substr(8, 2)), stoi(userInfo[i][1].substr(5, 2)) - 1,
-                         stoi(userInfo[i][1].substr(0, 4)) - 1900);
+                         stoi(userInfo[i][1].substr(0, 4)) - 1900});
                 if (difftime(now, mktime(&reser)) < 0) {
                     change = i;
                     break;
                 }
-                 
+
             }
 
         }
