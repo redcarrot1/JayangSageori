@@ -39,7 +39,10 @@ private:
     void updateBookFileData();
 
     void updateBookfile();
+
     void validTime();
+
+    void validDate();
 
 public:
     Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId);
