@@ -373,7 +373,9 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
             returnArgv.push_back(stdName(name));
         }
         if (!phoneNum.empty()) {
-            returnArgv.push_back("");
+            if (name.empty()) {
+                returnArgv.push_back("");
+            }
             returnArgv.push_back(stdPhoneNum(phoneNum));
         }
     }
