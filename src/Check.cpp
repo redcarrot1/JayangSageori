@@ -10,6 +10,8 @@ void Check::showReservationList(string userId) {
         int inputYear = stoi(userData[i][1].substr(0, 4));
         int inputMonth = stoi(userData[i][1].substr(5, 2));
         int inputDay = stoi(userData[i][1].substr(8, 2));
+        int startHour = stoi(userData[i][2].substr(0, 2));
+        int startMin = stoi(userData[i][2].substr(3));
 
         time_t now;
         time(&now);
@@ -20,8 +22,8 @@ void Check::showReservationList(string userId) {
         user_stime.tm_year = inputYear - 1900;   // 주의 :년도는 1900년부터 시작
         user_stime.tm_mon = inputMonth - 1;      // 주의 :월은 0부터 시작
         user_stime.tm_mday = inputDay;
-        user_stime.tm_hour = 0;
-        user_stime.tm_min = 0;
+        user_stime.tm_hour = startHour;
+        user_stime.tm_min = startMin;
         user_stime.tm_sec = 0;
         user_stime.tm_isdst = 0;              // 썸머 타임 사용 안함
 
