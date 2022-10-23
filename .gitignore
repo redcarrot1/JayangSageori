@@ -8,3 +8,5 @@ CMakeLists.txt
 #book/**
 #resource/**
 #user/**
+
+.idea/**
