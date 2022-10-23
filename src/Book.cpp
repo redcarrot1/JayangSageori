@@ -62,7 +62,7 @@ void Book::updateBookFileData() {
 
     vector<string> newData;
     newData.push_back(data[3]);
-    newData.push_back(sdate);
+    newData.push_back(sOriginDate);
     newData.push_back(sUseStartTime);
     newData.push_back(sUseEndTime);
     newData.push_back(sRoomNumber);
