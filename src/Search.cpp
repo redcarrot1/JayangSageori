@@ -50,22 +50,16 @@ void Search::searchByNameAndPhone(const string &name, const string &phone) {
         time_t now, reserveat;
         time(&now);
 
-        change = 0;
-        {// TODO 과거인지 판단하는 곳
-            for (int i = 0; i < userInfo.size(); i++) {
-
-                tm reser({0, stoi(userInfo[i][2].substr(3, 2)), stoi(userInfo[i][2].substr(0, 2)),
-                         stoi(userInfo[i][1].substr(8, 2)), stoi(userInfo[i][1].substr(5, 2)) - 1,
-                         stoi(userInfo[i][1].substr(0, 4)) - 1900});
-                if (difftime(now, mktime(&reser)) < 0) {
-                    change = i;
-                    break;
-                }
-
+        change = userInfo.size();
+        for (int i = 0; i < userInfo.size(); i++) {
+            tm reser({0, stoi(userInfo[i][2].substr(3, 2)), stoi(userInfo[i][2].substr(0, 2)),
+                      stoi(userInfo[i][1].substr(8, 2)), stoi(userInfo[i][1].substr(5, 2)) - 1,
+                      stoi(userInfo[i][1].substr(0, 4)) - 1900});
+            if (difftime(now, mktime(&reser)) < 0) {
+                change = i;
+                break;
             }
-
         }
-
 
         cout << "이름\t\t\t전화번호" << endl;
         cout << info[location][1] << "\t\t\t" << info[location][2] << endl << endl;
