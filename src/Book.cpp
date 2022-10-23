@@ -53,6 +53,40 @@ bool Book::checkReservation() {
     return true;
 }
 
+bool comp(vector<string> &v1, vector<string> &v2) {
+    // 1. 예약 날짜 비교
+    string date1 = v1[1], date2 = v2[1];
+    date1.erase(remove(date1.begin(), date1.end(), '-'), date1.end());
+    date2.erase(remove(date2.begin(), date2.end(), '-'), date2.end());
+
+    if (date1 > date2) return false;
+    else if (date1 < date2) return true;
+
+
+    // 2. 시작 시각 비교
+    string start1 = v1[2], start2 = v2[2];
+    start1.erase(remove(start1.begin(), start1.end(), ':'), start1.end());
+    start2.erase(remove(start2.begin(), start2.end(), ':'), start2.end());
+
+    if (start1 > start2) return false;
+    else if (start1 < start2) return true;
+
+
+    // 3. 종료 시각 비교
+    string end1 = v1[3], end2 = v2[3];
+    end1.erase(remove(end1.begin(), end1.end(), ':'), end1.end());
+    end2.erase(remove(end2.begin(), end2.end(), ':'), end2.end());
+
+    if (end1 > end2) return false;
+    else if (end1 < end2) return true;
+
+
+    // 4. 방 번호 비교
+    string num1 = v1[4], num2 = v2[4];
+    if (num1[0] - '0' > num2[0] - '0') return false;
+    else return true;
+}
+
 void Book::updateBookFileData() {
     vector<string> data = File::getMetaData();
 
@@ -67,6 +101,8 @@ void Book::updateBookFileData() {
     newData.push_back(sUseEndTime);
     newData.push_back(sRoomNumber);
     userData.push_back(newData);
+
+    sort(userData.begin(), userData.end(), comp);
 }
 
 void Book::updateBookfile() {
@@ -113,8 +149,8 @@ void Book::validDate() {
     user_stime.tm_year = inputYear - 1900;   // 주의 :년도는 1900년부터 시작
     user_stime.tm_mon = inputMonth - 1;      // 주의 :월은 0부터 시작
     user_stime.tm_mday = inputDay;
-    user_stime.tm_hour = 0;
-    user_stime.tm_min = 0;
+    user_stime.tm_hour = startHour;
+    user_stime.tm_min = startMin;
     user_stime.tm_sec = 0;
     user_stime.tm_isdst = 0;              // 썸머 타임 사용 안함
 
