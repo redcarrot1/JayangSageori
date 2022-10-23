@@ -1,43 +1,22 @@
 #include "Book.h"
 
 Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId) {
-    validTime();
-
+    this->sOriginDate = sdate;
     this->userId = userId;
-    stringstream ssInt(sRoomNumber);
+
     this->sRoomNumber = sRoomNumber;
-    int roomNumberInt;
-    ssInt >> roomNumberInt;
-    this->iRoomNumber = roomNumberInt;
+    this->iRoomNumber = stoi(sRoomNumber);
+
     this->sUseStartTime = sUseStartTime;
     this->sUseEndTime = sUseEndTime;
-    string startHour = sUseStartTime.substr(0, 2);
-    stringstream sStartHour(startHour);
 
-    int hourStart;
-    sStartHour >> hourStart;
-    this->startHour = hourStart;
+    this->startHour = stoi(sUseStartTime.substr(0, 2));
+    this->startMin = stoi(sUseStartTime.substr(3));
 
-    string startMinute = sUseStartTime.substr(2, 2);
-    stringstream sStartMinute(startMinute);
+    this->endHour = stoi(sUseEndTime.substr(0, 2));
+    this->endMin = stoi(sUseEndTime.substr(3));
+    validTime();
 
-    int minuteStart;
-    sStartMinute >> minuteStart;
-    this->startMin = minuteStart;
-
-    string endHour = sUseEndTime.substr(0, 2);
-    stringstream sEndHour(endHour);
-
-    int hourEnd;
-    sEndHour >> hourEnd;
-    this->endHour = hourEnd;
-
-    string endMinute = sUseEndTime.substr(2, 2);
-    stringstream sEndMinute(endMinute);
-
-    int minuteEnd;
-    sEndMinute >> minuteEnd;
-    this->endMin = minuteEnd;
     sIndex = (this->startHour - 9) * 2;
     eIndex = (this->endHour - 9) * 2;
     if (this->startMin == 30) {
@@ -47,7 +26,6 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
         eIndex += 1;
     }
 
-    this->sOriginDate = sdate;
     sdate.erase(remove(sdate.begin(), sdate.end(), '-'), sdate.end());
     this->sdate = sdate;
 
@@ -57,15 +35,6 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
 
 
 bool Book::checkReservation() {
-    try {
-        if ((startHour > endHour) || (startHour == endHour && startMin > endMin)) {
-            throw WrongRuleArgumentException(this->sUseEndTime, "예약 종료 시간은 예약 시작 시간보다 빨라질 수 없습니다.");
-        }
-    }
-    catch (exception &e) {
-        exceptionMannager(e);
-    }
-
     // 예약되어있는지 확인
     vector<int> reservedIndex;
     for (int i = sIndex; i < eIndex; i++) {
@@ -75,10 +44,6 @@ bool Book::checkReservation() {
     }
 
     if (reservedIndex.size() > 0) {
-        int start = reservedIndex[0];
-        int end = reservedIndex[reservedIndex.size() - 1];
-
-
         cout << "[오류] " << sOriginDate << " " << sRoomNumber << "번 스터디룸 " << this->sUseStartTime << " ~ "
              << this->sUseEndTime << "는 예약 불가능한 상태입니다." << endl;
         return false;
@@ -118,22 +83,17 @@ void Book::excuteBook() {
 }
 
 void Book::validTime() {
+    if (this->startHour < 9 || this->startHour > 19)
+        throw WrongRuleArgumentException(this->sUseStartTime, "스터디룸은 09:00 ~ 20:00까지 운영합니다.");
 
-    int startHour = stoi(this->sUseStartTime.substr(0, 2));
-    int startMinute = stoi(this->sUseStartTime.substr(3));
-    if (startHour < 9 || startHour > 19)
-        throw WrongRuleArgumentException(sUseStartTime, "스터디룸은 09:00 ~ 20:00까지 운영합니다.");
-
-    int endHour = stoi(this->sUseEndTime.substr(0, 2));
-    int endMinute = stoi(this->sUseEndTime.substr(3));
-    if (endHour < 9 || endHour > 19) {
-        throw WrongRuleArgumentException(sUseEndTime, "스터디룸은 09:00 ~ 20:00까지 운영합니다.");
+    if (this->endHour < 9 || this->endHour > 20 || (this->endHour == 20 && this->endMin == 30)) {
+        throw WrongRuleArgumentException(this->sUseEndTime, "스터디룸은 09:00 ~ 20:00까지 운영합니다.");
     }
 
-    if (startHour == endHour) {
-        if (startMinute >= endMinute)
-            throw WrongRuleArgumentException(sUseEndTime, "예약 끝나는 시각은 시작 시각 이후여야 합니다.");
+    if (this->startHour == this->endHour) {
+        if (this->startMin >= this->endMin)
+            throw WrongRuleArgumentException(this->sUseEndTime, "예약 끝나는 시각은 시작 시각 이후여야 합니다.");
     }
-    else if (startHour > endHour)
-        throw WrongRuleArgumentException(sUseEndTime, "예약 끝나는 시각은 시작 시각 이후여야 합니다.");
+    else if (this->startHour > this->endHour)
+        throw WrongRuleArgumentException(this->sUseEndTime, "예약 끝나는 시각은 시작 시각 이후여야 합니다.");
 }
