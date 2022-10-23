@@ -10,24 +10,23 @@ vector<string> Parsing::split(string line)
 		return result;
 	}
 	while (true) {
-		if (end == line.length() - 1) {//공백류 or 저장해야 할 값
-			if (line[start] == '\t' || line[start] == ' ') {
-				break;
+		if (line[end] == '\t' || line[end] == ' ') {
+			if (start == end) {
+				result.push_back("");
 			}
 			else {
-				result.push_back(line.substr(start, end - start+1));//end가 공백이 아닌 글자를 가리키고있음
-				break;
-			}
-		}
-		if (line[end] == '\t' || line[end] == ' ') {
-			if (line[start] == '\t' || line[start] == ' '){
-			//공백이 연속으로 2개가 들어온 경우 하나로 간주
-			}
-			else
-			{
 				result.push_back(line.substr(start, end - start));
 			}
+
+			if (end == line.length() - 1) {
+				break;
+			}
+
 			start = end + 1;
+		}
+		else if (end == line.length() - 1) {
+			result.push_back(line.substr(start, end - start + 1));
+			break;
 		}
 		end++;
 	}
