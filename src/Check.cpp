@@ -11,7 +11,8 @@ void Check::showReservationList(string userId) {
     cout << "col : " << col << endl;
      */
 
-    // 출력문은 작동 확인되면 수정하겠습니다.
+     // 출력문은 작동 확인되면 수정하겠습니다.
+
     for (int i = 0; i < row; i++) {
         for (int j = 0; j < col; j++) {
             cout << userData[i][j] << "\t";
@@ -21,7 +22,7 @@ void Check::showReservationList(string userId) {
 }
 
 void Check::excuteCheck(string userId) {
-    cout << "예약번호\t스터디룸 번호\t날짜\t시작시간\t종료시간" << endl;
+    cout << "예약번호  날짜\t     종료시간 시작시간  스터디룸 번호" << endl;
     showReservationList(std::move(userId));
 };
 
