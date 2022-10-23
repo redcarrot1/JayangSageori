@@ -73,11 +73,14 @@ bool Book::checkReservation() {
         }
     }
 
+    cout << "reservedIndex : " << reservedIndex.size() << endl;
+
     if (reservedIndex.size() > 0) {
-        int start = *reservedIndex.begin();
-        int end = *reservedIndex.end();
-        cout << "[오류] date studyroomnumber 번 스터디룸 " << endl;
-        return false;
+        int start = reservedIndex[0];
+        int end = reservedIndex[reservedIndex.size()-1];
+
+
+        cout << "[오류] "<< sdate << " " << sRoomNumber << "번의" << reservedIndex[0] << " ~ " << reservedIndex[reservedIndex.size()-1] << "시간은 이미 예약이 되어있습니다." << endl;        return false;
     }
 
     return true;
