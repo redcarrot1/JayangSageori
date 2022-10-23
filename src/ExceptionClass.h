@@ -3,11 +3,13 @@
 #include <exception>
 #include <string>
 #include <iostream>
+#include "WindowEnum.h"
+#include "Help.h"
 
 using std::string;
 using std::exception;
 
-/*Å¬·¡½º ¼±¾ğ*/
+/*í´ë˜ìŠ¤ ì„ ì–¸*/
 class CustomException : public exception {
 private:
     string error = "default error Message";
@@ -17,13 +19,15 @@ public:
     const char * what() const noexcept override;
 };
 
-// 1´Ü°è »ó¼Ó
-class CommandException : public CustomException {   // »ı¼ºÀÚ ÀÎÀÚ string 1°³·Î Á¤ÀÇ
+// 1ë‹¨ê³„ ìƒì†
+class CommandException : public CustomException {   // ìƒì„±ì ì¸ì string 1ê°œë¡œ ì •ì˜
 private:
     string command;
+    Window window;
 public:
-    CommandException(string command);
+    CommandException(string command, Window window);
     const string &getCommand() const;
+    void printHelp();
 };
 
 class ArgumentException : public CustomException {
@@ -36,24 +40,24 @@ public:
 
 class FileException : public CustomException {
 private:
-    string filepath = "filepath"; //±âº»°ª
+    string filepath = "filepath"; //ê¸°ë³¸ê°’
 public:
     FileException();
     const string &getFilePath() const;
     void setFilePath(const string &path);
 };
 
-// 2´Ü°è »ó¼Ó
+// 2ë‹¨ê³„ ìƒì†
 class UnableCommandException : public CommandException {
 private:
     string cmd;
 public:
-    UnableCommandException(string command, string cmd);
+    UnableCommandException(string command, Window window, string cmd);
 };
 
 class WrongCommandException : public CommandException {
 public:
-    WrongCommandException(string command);
+    WrongCommandException(string command, Window window);
 };
 
 class WrongNumArgumentException : public ArgumentException {
@@ -92,7 +96,7 @@ public:
     WrongFormatFileException(string filepath);
 };
 
-// 3´Ü°è »ó¼Ó (File)
+// 3ë‹¨ê³„ ìƒì† (File)
 
 class NotExistMetaFileException : public NotExistFileException {
 public:
@@ -104,6 +108,5 @@ public:
     WrongFormatMetaFileException(string filepath = "meta.txt");
 };
 
-/*¸Ş¼Òµå ¼±¾ğ*/
+/*ë©”ì†Œë“œ ì„ ì–¸*/
 void exceptionMannager(exception& e);
-//void exceptionMannager(string exceptionName);
