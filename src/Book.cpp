@@ -73,8 +73,6 @@ bool Book::checkReservation() {
         }
     }
 
-    cout << "reservedIndex : " << reservedIndex.size() << endl;
-
     if (reservedIndex.size() > 0) {
         int start = reservedIndex[0];
         int end = reservedIndex[reservedIndex.size()-1];
@@ -111,5 +109,6 @@ void Book::excuteBook() {
     if (checkReservation()) {
         updateBookFileData();
         updateBookfile();
+        cout << "예약이 정상적으로 완료되었습니다." << endl;
     }
 }
