@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <ctime>
 #include "ExceptionClass.h"
 #include "Convert2Standard.h"
 #include "Parsing.h"
@@ -85,9 +86,14 @@ void windowUserBook(string &command, vector<string> &argv) {
         book.excuteBook();
     }
     else if (command == "list") {
-        // TODO 인자가 0인 경우 호출할 메소드가 없음
         vector<string> stdArgv = Convert2Standard::convertList(argv);
-        List::excuteList(stdArgv[0]);
+        if (stdArgv.empty()) {
+            time_t timer = time(NULL);
+            struct tm *t = localtime(&timer);
+            string arg = to_string(t->tm_year + 1900) + "-" + to_string(t->tm_mon + 1) + "-" + to_string(t->tm_mday);
+            List::excuteList(arg);
+        }
+        else List::excuteList(stdArgv[0]);
     }
     else if (command == "back") {
         window = Window::User;
