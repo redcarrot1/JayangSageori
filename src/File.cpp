@@ -131,7 +131,7 @@ vector<vector<string>> File::getBooking(string date) {//예약을 하고자 날짜를 인�
         }
         file.close();
     }
-    ifstream datafile(rootPath + "/book/" + date + ".txt");
+    ifstream datafile(rootPath + "book/" + date + ".txt");
     vector<vector<string>> data;
     string line;
     while (1) {
