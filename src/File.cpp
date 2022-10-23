@@ -17,11 +17,56 @@ void File::start() {
     }
     else {
         try {
-            cout << "meta.txt 이(가) 존재하는지 확인합니다." << endl;
-            if (!fs::exists(rootPath + "resource/meta.txt"))
+            cout << "meta.txt 이(가) 존재하는지 확인합니다.";
+            if (!fs::exists(rootPath + "resource/meta.txt")) {
+                cout << endl;
                 throw NotExistMetaFileException();
+            }
+            else cout << " ...성공" << endl;
         }
         catch (exception &e) {
+            exceptionMannager(e);
+        }
+        try {
+            cout << "meta.txt 이(가) 올바른 형식을 만족하는지 검증합니다." << endl;
+            ifstream datafile;
+            datafile.open(rootPath + "resource/meta.txt");
+
+            vector<string> data;
+            while (1) {
+                string line;
+                getline(datafile, line);
+                if (line == "")
+                    break;
+                istringstream iss(line);
+                string str_buf;
+                while (getline(iss, str_buf, '\t')) {
+                    data.push_back(str_buf);
+                }
+            }
+            datafile.close();
+
+            if (data.size() != 4) throw WrongFormatMetaFileException();
+            // 1. 이름 검증
+            if (data[0].length() < 2 || 30 < data[0].length()) throw WrongFormatMetaFileException();
+            for (char &ch: data[0]) {
+                if (!isalpha(ch)) throw WrongFormatMetaFileException();
+            }
+
+            // 2. 전화번호 검증
+            if (data[1].length() < 7 || 20 < data[1].length()) throw WrongFormatMetaFileException();
+            for (char &ch: data[1]) {
+                if (!isdigit(ch)) throw WrongFormatMetaFileException();
+            }
+
+            // 3. 회원 수, 예약 수 검증
+            for (char &ch: data[2]) {
+                if (!isdigit(ch)) throw WrongFormatMetaFileException();
+            }
+            for (char &ch: data[3]) {
+                if (!isdigit(ch)) throw WrongFormatMetaFileException();
+            }
+        } catch (exception &e) {
             exceptionMannager(e);
         }
     }

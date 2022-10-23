@@ -17,6 +17,7 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
     this->endMin = stoi(sUseEndTime.substr(3));
     validTime();
     validDate();
+    validRoomNumber();
 
     sIndex = (this->startHour - 9) * 2;
     eIndex = (this->endHour - 9) * 2;
@@ -140,6 +141,28 @@ void Book::validDate() {
     int inputMonth = stoi(sOriginDate.substr(5, 2));
     int inputDay = stoi(sOriginDate.substr(8, 2));
 
+    if (inputYear < 2000 || inputYear > 3000)
+        throw WrongRuleArgumentException(this->sOriginDate, "연(year)은 2000 이상, 3000 이하만 가능합니다.");
+    if (inputMonth < 1 || inputMonth > 12)
+        throw WrongRuleArgumentException(this->sOriginDate, "존재하지 않는 달(month)입니다.");
+    if (inputMonth == 2) {
+        if ((inputYear % 4 == 0 && inputYear % 100 != 0) || (inputYear % 100 == 0 && inputYear % 400 == 0)) {
+            if (inputDay < 0 || inputDay > 29)
+                throw WrongRuleArgumentException(this->sOriginDate, "존재하지 않는 일(day)입니다.");
+        }
+        else {
+            if (inputDay < 0 || inputDay > 28)
+                throw WrongRuleArgumentException(this->sOriginDate, "존재하지 않는 일(day)입니다.");
+        }
+    }
+    else if (inputMonth == 4 || inputMonth == 6 || inputMonth == 9 || inputMonth == 11) {
+        if (inputDay < 0 || inputDay > 30) throw WrongRuleArgumentException(this->sOriginDate, "존재하지 않는 일(day)입니다.");
+    }
+    else {
+        if (inputDay < 0 || inputDay > 31) throw WrongRuleArgumentException(this->sOriginDate, "존재하지 않는 일(day)입니다.");
+    }
+
+
     time_t now;
     time(&now);
 
@@ -164,4 +187,9 @@ void Book::validDate() {
     if (d_diff < 0)
         throw WrongRuleArgumentException(this->sOriginDate, "과거는 예약할 수 없습니다.");
 
+}
+
+void Book::validRoomNumber() {
+    if (this->iRoomNumber <= 0 || this->iRoomNumber > 9)
+        throw WrongRuleArgumentException(this->sRoomNumber, "스터디룸 번호는 1부터 9까지 존재합니다.");
 }

@@ -43,6 +43,7 @@ private:
     void validTime();
 
     void validDate();
+    void validRoomNumber();
 
 public:
     Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId);

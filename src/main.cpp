@@ -51,8 +51,11 @@ void windowMain(string &command, vector<string> &argv) {
         else throw WrongNumArgumentException("help");
     }
     else if (command == "exit") {
-        cout << "프로그램을 종료합니다." << endl;
-        exit(EXIT_SUCCESS);
+        if (argv.size() == 1) {
+            cout << "프로그램을 종료합니다." << endl;
+            exit(EXIT_SUCCESS);
+        }
+        else throw WrongNumArgumentException("exit");
     }
     else {
         throw UnableCommandException(command, window, "Main");
@@ -61,13 +64,16 @@ void windowMain(string &command, vector<string> &argv) {
 
 void windowUser(string &command, vector<string> &argv) {
     if (command == "book") {
-        window = Window::UserBook;
+        if (argv.size() == 1) window = Window::UserBook;
+        else throw WrongNumArgumentException("book");
     }
     else if (command == "search") {
-        window = Window::UserSearch;
+        if (argv.size() == 1) window = Window::UserSearch;
+        else throw WrongNumArgumentException("search");
     }
     else if (command == "logout") {
-        window = Window::Main;
+        if (argv.size() == 1) window = Window::Main;
+        else throw WrongNumArgumentException("logout");
     }
     else if (command == "help") {
         if (argv.size() == 1) Help::printHelp(window);
@@ -96,7 +102,8 @@ void windowUserBook(string &command, vector<string> &argv) {
         else List::excuteList(stdArgv[0]);
     }
     else if (command == "back") {
-        window = Window::User;
+        if (argv.size() == 1) window = Window::User;
+        else throw WrongNumArgumentException("back");
     }
     else if (command == "help") {
         if (argv.size() == 1) Help::printHelp(window);
@@ -114,7 +121,8 @@ void windowUserSearch(string &command, vector<string> &argv) {
         else throw WrongNumArgumentException("check");
     }
     else if (command == "back") {
-        window = Window::User;
+        if (argv.size() == 1) window = Window::User;
+        else throw WrongNumArgumentException("back");
     }
     else if (command == "help") {
         if (argv.size() == 1) Help::printHelp(window);
@@ -128,10 +136,12 @@ void windowUserSearch(string &command, vector<string> &argv) {
 
 void windowAdmin(string &command, vector<string> &argv) {
     if (command == "search") {
-        window = Window::AdminSearch;
+        if (argv.size() == 1) window = Window::AdminSearch;
+        else throw WrongNumArgumentException("search");
     }
     else if (command == "logout") {
-        window = Window::Main;
+        if (argv.size() == 1) window = Window::Main;
+        else throw WrongNumArgumentException("logout");
     }
     else if (command == "help") {
         if (argv.size() == 1) Help::printHelp(window);
@@ -151,7 +161,8 @@ void windowAdminSearch(string &command, vector<string> &argv) {
         else Search::searchByNameAndPhone(stdArgv[0], stdArgv[1]);
     }
     else if (command == "back") {
-        window = Window::Admin;
+        if (argv.size() == 1) window = Window::Admin;
+        else throw WrongNumArgumentException("back");
     }
     else if (command == "help") {
         if (argv.size() == 1) Help::printHelp(window);
@@ -169,7 +180,6 @@ string File::rootPath = "/Users/hongseungtaeg/Desktop/project/mycode/";
 
 int main() {
     cout << "프로그램을 시작합니다." << endl;
-    cout << "Test_내 현재 경로 : " << fs::current_path() << std::endl;
     File::start();
 
     vector<string> argv;
