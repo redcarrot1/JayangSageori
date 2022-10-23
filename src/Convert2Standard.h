@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "WindowEnum.h"
 
 using std::string;
 using std::vector;
@@ -19,7 +20,7 @@ private:
     static string stdRoomID(string roomID);    //방 번호를 표준형식으로 바꾸는 메소드
 public:
     Convert2Standard() = delete;
-    static string stdCommand(string command);
+    static string stdCommand(string command, Window window);
     static vector<string> convertSign(vector<string> argv);    // 회원가입, 로그인 string name, string phoneNum
     static vector<string> convertBook(vector<string> argv);    // 예약하기 string date, string roomID, string startTime, string endTime
     static vector<string> convertList(vector<string> argv);    // 예약 상태 확인 string date

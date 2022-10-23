@@ -53,7 +53,7 @@ void windowMain(string &command, vector<string> &argv) {
         exit(EXIT_SUCCESS);
     }
     else {
-        throw UnableCommandException(command, "Main");
+        throw UnableCommandException(command, window, "Main");
     }
 }
 
@@ -73,7 +73,7 @@ void windowUser(string &command, vector<string> &argv) {
         else throw WrongNumArgumentException("help");
     }
     else {
-        throw UnableCommandException(command, "User");
+        throw UnableCommandException(command, window, "User");
     }
 }
 
@@ -97,7 +97,7 @@ void windowUserBook(string &command, vector<string> &argv) {
         else throw WrongNumArgumentException("help");
     }
     else {
-        throw UnableCommandException(command, "Book");
+        throw UnableCommandException(command, window, "Book");
     }
 }
 
@@ -114,7 +114,7 @@ void windowUserSearch(string &command, vector<string> &argv) {
         else throw WrongNumArgumentException("help");
     }
     else {
-        throw UnableCommandException(command, "Search");
+        throw UnableCommandException(command, window, "Search");
     }
 }
 
@@ -131,7 +131,7 @@ void windowAdmin(string &command, vector<string> &argv) {
         else throw WrongNumArgumentException("help");
     }
     else {
-        throw UnableCommandException(command, "Admin");
+        throw UnableCommandException(command, window, "Admin");
     }
 }
 
@@ -151,13 +151,13 @@ void windowAdminSearch(string &command, vector<string> &argv) {
         else throw WrongNumArgumentException("help");
     }
     else {
-        throw UnableCommandException(command, "Search");
+        throw UnableCommandException(command, window, "Search");
     }
 }
 
 // 데이터 파일이 저장되어 있는 폴더로 경로 지정하시면 됩니다.
 // 예를 들어, /kim/desktop/  으로 설정하시면, 해당 폴더 내에 book 폴더, resource 폴더, user 폴더가 있어야 합니다.
-string File::rootPath = "/Users/hongseungtaeg/Desktop/project/mycode/";
+string File::rootPath = "/Users/vaughan/CLionProjects/TeamProject/";
 
 int main() {
     cout << "프로그램을 시작합니다." << endl;
@@ -177,7 +177,7 @@ int main() {
                 argv = Parsing::split(command);
                 if (argv.empty()) continue;
 
-                command = Convert2Standard::stdCommand(argv.at(0));
+                command = Convert2Standard::stdCommand(argv.at(0), window);
 
                 if (window == Window::Main) windowMain(command, argv);
                 else if (window == Window::User) windowUser(command, argv);

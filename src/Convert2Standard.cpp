@@ -328,6 +328,7 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
     string phoneNum;
     vector<string> returnArgv;
     size_t argNum = argv.size() - 1;
+    Window window = Window::AdminSearch;
     if (argNum == 0) {
         return {};
     }
@@ -372,6 +373,7 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
             returnArgv.push_back(stdName(name));
         }
         if (!phoneNum.empty()) {
+            returnArgv.push_back("");
             returnArgv.push_back(stdPhoneNum(phoneNum));
         }
     }
@@ -383,7 +385,7 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
                 name = argv.at(2);
             }
             else {
-                CommandException e = CommandException("search");
+                CommandException e = CommandException("search", window);
                 string basicError(e.getError());
                 e.setError(basicError + "인자가 2개인 경우 하나는 이름, 하나는 전화번호 형식을 따라야합니다.");
                 throw e;
@@ -395,7 +397,7 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
                 phoneNum = argv.at(2);
             }
             else {
-                CommandException e = CommandException("search");
+                CommandException e = CommandException("search", window);
                 string basicError(e.getError());
                 e.setError(basicError + "인자가 2개인 경우 하나는 이름, 하나는 전화번호 형식을 따라야합니다.");
                 throw e;
@@ -414,7 +416,7 @@ vector<string> Convert2Standard::convertSearch(vector<string> argv) {
 }
 
 //추가
-string Convert2Standard::stdCommand(string command) {
+string Convert2Standard::stdCommand(string command, Window window) {
     size_t length = command.length();
     string std;
     // 1. 길이 확인 (2^30_)
@@ -422,7 +424,7 @@ string Convert2Standard::stdCommand(string command) {
     for (int i = 0; i < length; i++) {
         char ch = command[i];
         if (!isalpha(ch)) {
-            throw WrongCommandException(command);
+            throw WrongCommandException(command, window);
         }
         if ('A' <= ch && ch <= 'Z') {  // 대소문자 변환
             ch = tolower(ch);
@@ -433,8 +435,7 @@ string Convert2Standard::stdCommand(string command) {
                                   "logout", "ask", "search"};
     auto it = find(commandList.begin(), commandList.end(), std);
     if (it == commandList.end()) {
-        throw WrongCommandException(command);
+        throw WrongCommandException(command, window);
     }
     return std;
 }
-

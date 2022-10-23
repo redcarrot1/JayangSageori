@@ -15,11 +15,15 @@ const char * CustomException::what() const noexcept {
     return this->getError();
 }
 
-CommandException::CommandException(string command) : command(command) {
+CommandException::CommandException(string command, Window window) : command(command), window(window) {
     this->setError("명령어 "+command+"(이)가 잘못되었습니다.");
 }
 const string &CommandException::getCommand() const {
     return this->command;
+}
+
+void CommandException::printHelp() {
+    Help::printHelp(window);
 }
 
 ArgumentException::ArgumentException(string str) : str(str) {
@@ -39,11 +43,11 @@ void FileException::setFilePath(const std::string &path) {
     this->filepath = path;
 }
 
-UnableCommandException::UnableCommandException(string command, string cmd) : CommandException(command), cmd(cmd) {
+UnableCommandException::UnableCommandException(string command, Window window, string cmd) : CommandException(command, window), cmd(cmd) {
     this->setError("현재 명령창 "+this->cmd+"에서 "+this->getCommand()+"은(는) 사용할 수 없는 명령어입니다.");
 }
 
-WrongCommandException::WrongCommandException(string command) : CommandException(command) {
+WrongCommandException::WrongCommandException(string command, Window window) : CommandException(command, window) {
     this->setError("명령어 "+this->getCommand()+"은(는) 존재하지 않는 명령어입니다.");
 }
 
@@ -80,8 +84,9 @@ WrongFormatMetaFileException::WrongFormatMetaFileException(string filepath) : Wr
 
 //메소드 정의
 void exceptionMannager(exception& e){
+    exception* eptr = &e;
     string exceptionName = typeid(e).name();
-    vector<string> helpExceptionList = { typeid(CommandException).name(), typeid(UnableCommandException).name(), typeid(WrongCommandException).name()};
+    vector<string> helpExceptionList = { typeid(CommandException).name(), typeid(UnableCommandException).name(), typeid(WrongCommandException).name() };
     vector<string> exitExceptionList = { typeid(FileException).name(), typeid(NotExistMetaFileException).name(), typeid(WrongFormatMetaFileException).name(), typeid(NotExistFileException).name(), typeid(WrongFormatFileException).name()};
     cout << "[오류] " << exceptionName << " 예외가 발생하였습니다." << endl;
     cout << e.what() << endl;  // 세부 정보
@@ -89,7 +94,8 @@ void exceptionMannager(exception& e){
     auto itHelp = find(helpExceptionList.begin(), helpExceptionList.end(), exceptionName);
     if (itHelp != helpExceptionList.end()){
         cout<<"도움말을 출력합니다."<<endl;
-        // help 호출
+        CommandException* cmdptr = (CommandException*)eptr;
+        cmdptr->printHelp();
     }
     auto itExit = find(exitExceptionList.begin(), exitExceptionList.end(), exceptionName);
     if (itExit != exitExceptionList.end()){
