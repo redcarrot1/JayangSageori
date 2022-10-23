@@ -71,7 +71,7 @@ void Book::updateBookFileData() {
 
 void Book::updateBookfile() {
     File::setUserData(userId, userData);
-    File::setBooking(sdate, bookFileData);
+    File::setBooking(sOriginDate, bookFileData);
 }
 
 void Book::excuteBook() {

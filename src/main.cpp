@@ -110,7 +110,8 @@ void windowUserBook(string &command, vector<string> &argv) {
 
 void windowUserSearch(string &command, vector<string> &argv) {
     if (command == "check") {
-        Check::excuteCheck(user.getUserId());
+        if (argv.size() == 1) Check::excuteCheck(user.getUserId());
+        else throw WrongNumArgumentException("check");
     }
     else if (command == "back") {
         window = Window::User;
