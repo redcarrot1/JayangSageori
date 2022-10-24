@@ -20,7 +20,7 @@ void List::excuteList(string date) {
     }
 
     cout << endl;
-    for (int i = 0; i < 9; i++) {
+    for (int i = 1; i < 10; i++) {
         cout << left << setw(7) << i + 1;
         for (int j = 0; j < 22; j++) {
             if (fileData[i][j] == "0") cout << left << setw(7) << " °¡´É ";
