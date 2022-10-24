@@ -186,7 +186,7 @@ void Book::validDate() {
     if (tm_day >= 90)
         throw WrongRuleArgumentException(this->sOriginDate, "최대 90일 후까지 예약할 수 있습니다.");
     if (d_diff < 0)
-        throw WrongRuleArgumentException(this->sOriginDate, "과거는 예약할 수 없습니다.");
+        throw WrongRuleArgumentException(this->sOriginDate, "입력 인자 \"시간\"이 의미규칙을 만족하지 못합니다.");
 
 }
 
