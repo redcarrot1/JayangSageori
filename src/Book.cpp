@@ -90,6 +90,7 @@ bool comp(vector<string> &v1, vector<string> &v2) {
 
 void Book::updateBookFileData() {
     vector<string> data = File::getMetaData();
+    data[3] = to_string(stoi(data[3]) + 1);
 
     for (int i = sIndex; i < eIndex; i++) {
         bookFileData[iRoomNumber][i] = data[3];
