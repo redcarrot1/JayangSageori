@@ -17,6 +17,7 @@
 #include "List.h"
 #include "Search.h"
 #include "User.h"
+#pragma warning(disable:4996)
 
 using namespace std;
 

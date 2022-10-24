@@ -24,7 +24,7 @@ void List::excuteList(string date) {
         cout << left << setw(7) << i;
         for (int j = 0; j < 22; j++) {
             if (fileData[i][j] == "0") cout << left << setw(7) << " °¡´É ";
-            else cout << left << setw(7) << "X";
+            else cout << left << setw(7) << " X ";
         }
         cout << endl;
     }
