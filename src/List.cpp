@@ -21,7 +21,7 @@ void List::excuteList(string date) {
 
     cout << endl;
     for (int i = 1; i < 10; i++) {
-        cout << left << setw(7) << i + 1;
+        cout << left << setw(7) << i;
         for (int j = 0; j < 22; j++) {
             if (fileData[i][j] == "0") cout << left << setw(7) << " 가능 ";
             else cout << left << setw(7) << "X";
@@ -65,7 +65,7 @@ void List::validDate(string date) {
 
     user_stime.tm_year = inputYear - 1900;   // 주의 :년도는 1900년부터 시작
     user_stime.tm_mon = inputMonth - 1;      // 주의 :월은 0부터 시작
-    user_stime.tm_mday = inputDay - 1;
+    user_stime.tm_mday = inputDay+1;
     user_stime.tm_hour = 0;
     user_stime.tm_min = 0;
     user_stime.tm_sec = 0;
