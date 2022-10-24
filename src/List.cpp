@@ -35,8 +35,6 @@ void List::validDate(string date) {
     int inputMonth = stoi(date.substr(5, 2));
     int inputDay = stoi(date.substr(8, 2));
 
-    if (inputYear < 2000 || inputYear > 3000)
-        throw WrongRuleArgumentException(date, "연(year)은 2000 이상, 3000 이하만 가능합니다.");
     if (inputMonth < 1 || inputMonth > 12)
         throw WrongRuleArgumentException(date, "존재하지 않는 달(month)입니다.");
     if (inputMonth == 2) {

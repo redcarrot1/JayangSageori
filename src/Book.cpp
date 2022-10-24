@@ -142,8 +142,6 @@ void Book::validDate() {
     int inputMonth = stoi(sOriginDate.substr(5, 2));
     int inputDay = stoi(sOriginDate.substr(8, 2));
 
-    if (inputYear < 2000 || inputYear > 3000)
-        throw WrongRuleArgumentException(this->sOriginDate, "연(year)은 2000 이상, 3000 이하만 가능합니다.");
     if (inputMonth < 1 || inputMonth > 12)
         throw WrongRuleArgumentException(this->sOriginDate, "존재하지 않는 달(month)입니다.");
     if (inputMonth == 2) {
