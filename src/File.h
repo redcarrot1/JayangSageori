@@ -26,10 +26,14 @@ public:
     static vector<vector<string>> getUserData(string id);
 
     static vector<vector<string>> getBooking(string date);
+    
+    static vector<string> getReserNum();
 
     static void addNewUser(vector<string> newUser);
 
     static void setUserData(string id, vector<vector<string>> data);
 
     static void setBooking(string date, vector<vector<string>> data);
+
+    static void addReserNum(string num);
 };

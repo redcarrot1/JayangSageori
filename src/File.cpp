@@ -9,12 +9,20 @@ void File::start() {
     if (!fs::exists(rootPath + "user")) { fs::create_directory(rootPath + "user"); }
     if (!fs::exists(rootPath + "resource")) { fs::create_directory(rootPath + "resource"); }
     if (!fs::exists(rootPath + "resource/userdata.txt")) { ofstream(rootPath + "resource/userdata.txt"); }
+    if (!fs::exists(rootPath + "resource/resernum.txt")) {//resernum 초기화
+        ofstream(rootPath + "resource/resernum.txt");
+        ofstream datafile;
+        datafile.open(rootPath + "resource/resernum.txt");
+        datafile << "0";
+        datafile.close();
+    }
     if (fs::exists(rootPath + "meta.txt")) {
         if (!fs::exists(rootPath + "resource/meta.txt")) {
             fs::copy(rootPath + "meta.txt", rootPath + "resource/meta.txt");
         }
         fs::remove(rootPath + "meta.txt");
     }
+
     else {
         try {
             cout << "meta.txt 이(가) 존재하는지 확인합니다.";
@@ -45,8 +53,7 @@ void File::start() {
                 }
             }
             datafile.close();
-
-            if (data.size() != 4) throw WrongFormatMetaFileException();
+            if (data.size() != 13) throw WrongFormatMetaFileException();
             // 1. 이름 검증
             if (data[0].length() < 2 || 30 < data[0].length()) throw WrongFormatMetaFileException();
             for (char &ch: data[0]) {
@@ -58,13 +65,18 @@ void File::start() {
             for (char &ch: data[1]) {
                 if (!isdigit(ch)) throw WrongFormatMetaFileException();
             }
-
             // 3. 회원 수, 예약 수 검증
             for (char &ch: data[2]) {
                 if (!isdigit(ch)) throw WrongFormatMetaFileException();
             }
             for (char &ch: data[3]) {
                 if (!isdigit(ch)) throw WrongFormatMetaFileException();
+            }
+            //4. 방 수용 인원 수 검증
+            for (int i = 0; i < data.size()-4; i++) {
+                for (char& ch : data[i+4]) {
+                    if (!isdigit(ch)) throw WrongFormatMetaFileException();
+                }
             }
         } catch (exception &e) {
             exceptionMannager(e);
@@ -194,6 +206,19 @@ vector<vector<string>> File::getBooking(string date) {//예약을 하고자 날짜를 인�
     return data; //해당 날짜의 예약 정보 전체 저장 벡터 return (한 행에 한 스터디룸)
 }
 
+vector<string> File::getReserNum() {
+    //resource/resernum.txt
+    ifstream datafile(rootPath + "resource/resernum.txt");
+    vector<string> vec;
+    string line, buf;
+    getline(datafile, line);
+    istringstream iss(line);
+    while (getline(iss, buf, '\t')) {
+        vec.push_back(buf);
+    }
+    return vec;
+}
+
 void File::addNewUser(vector<string> newUser) { //새로운 user의 이름, 전화번호를 담고 있는 벡터
     ofstream file;
     vector<string> metaData = getMetaData();
@@ -298,5 +323,12 @@ void File::setBooking(string date, vector<vector<string>> data) {
     }
 }
 
-
+void File::addReserNum(string num) {
+    //resource/resernum.txt
+    ofstream file;
+    file.open("resource/resernum.txt", ios::out | ios::app);
+    file.seekp(-1, ios::end);
+    file << "\t" << num;
+    file.close();
+}
 
