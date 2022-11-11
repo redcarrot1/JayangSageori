@@ -13,7 +13,7 @@ void File::start() {
         ofstream(rootPath + "resource/resernum.txt");
         ofstream datafile;
         datafile.open(rootPath + "resource/resernum.txt");
-        datafile << "0";
+        datafile << "0   0\n"; //예약인원 사용자Id
         datafile.close();
     }
     if (fs::exists(rootPath + "meta.txt")) {
@@ -84,6 +84,28 @@ void File::start() {
     }
 }
 
+string File::getId(string reserveId)
+{
+    //resource/resernum.txt
+    ifstream datafile(rootPath + "resource/resernum.txt");
+    vector<vector<string>> vec;
+    string line;
+
+    while (1) {
+        getline(datafile, line);
+        if (line == "") break;
+        istringstream iss(line);
+        string str_buf;
+        vector<string> v;
+        while (getline(iss, str_buf, '\t')) {
+            v.push_back(str_buf);
+        }
+        vec.push_back(v);
+    }
+    datafile.close();
+    return  vec[stoi(reserveId)][1];
+}
+
 vector<vector<string>> File::getAllUsers() {
     //userdata.txt
     //UserData : userID, Name, phoneNum
@@ -120,7 +142,7 @@ User File::getAdmin() {
 
 vector<string> File::getMetaData() {
     //meta.txt
-    //관리자 이름, 전화번호, 현재 회원 수, 예약 번호
+    //관리자 이름, 전화번호, 현재 회원 수, 예약 번호, 방 별 수용 인원
     vector<string> data;
     ifstream datafile;
     try {
@@ -143,7 +165,7 @@ vector<string> File::getMetaData() {
         }
     }
     datafile.close();
-    return data;//정보 4개를 저장하는 벡터 return
+    return data;//정보 5 종류를 저장하는 벡터 return
 }
 
 vector<vector<string>> File::getUserData(string id) {
@@ -206,17 +228,27 @@ vector<vector<string>> File::getBooking(string date) {//예약을 하고자 날짜를 인�
     return data; //해당 날짜의 예약 정보 전체 저장 벡터 return (한 행에 한 스터디룸)
 }
 
-vector<string> File::getReserNum() {
+string File::getReserNum(string reserveId) {
     //resource/resernum.txt
     ifstream datafile(rootPath + "resource/resernum.txt");
-    vector<string> vec;
-    string line, buf;
-    getline(datafile, line);
-    istringstream iss(line);
-    while (getline(iss, buf, '\t')) {
-        vec.push_back(buf);
+    vector<vector<string>> vec;
+    string line;
+
+    while (1) {
+        getline(datafile, line);
+        if (line == "") break;
+        istringstream iss(line);
+        string str_buf;
+        vector<string> v;
+        while (getline(iss, str_buf, '\t')) {
+            v.push_back(str_buf);
+        }
+        vec.push_back(v);
     }
-    return vec;
+    datafile.close();
+
+    //reserveId와 일치하는 예약 인원 return
+    return vec[stoi(reserveId)][0];
 }
 
 void File::addNewUser(vector<string> newUser) { //새로운 user의 이름, 전화번호를 담고 있는 벡터
@@ -323,12 +355,34 @@ void File::setBooking(string date, vector<vector<string>> data) {
     }
 }
 
-void File::addReserNum(string num) {
+string File::getRoomCapacity(string roomNum)
+{
+    return getMetaData()[3+stoi(roomNum)];
+}
+
+void File::addReserNum(string num, string userId) {
     //resource/resernum.txt
     ofstream file;
-    file.open("resource/resernum.txt", ios::out | ios::app);
+    file.open(rootPath+"resource/resernum.txt", ios::out | ios::app);
     file.seekp(-1, ios::end);
-    file << "\t" << num;
+    file << num<<"\t"<<userId<<"\n";
     file.close();
 }
 
+void File::changeStudyRoom(vector <string> changeDate) {//reserveId, [date, time, changeStudyRoomId]가 담긴 벡터
+    string user_id = getId(changeDate[0]);
+    vector<vector<string>> data;
+    int target;
+
+    data = getUserData(user_id);
+
+    for (target = 0; target < data.size(); target++) {
+        if (data[target][0] == changeDate[0]) { // date & 시작 시간 비교
+            break;
+        }
+    }
+
+    data[target] = changeDate;
+
+    setUserData(user_id, data);
+}
