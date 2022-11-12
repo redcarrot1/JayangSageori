@@ -73,8 +73,8 @@ void File::start() {
                 if (!isdigit(ch)) throw WrongFormatMetaFileException();
             }
             //4. 방 수용 인원 수 검증
-            for (int i = 0; i < data.size()-4; i++) {
-                for (char& ch : data[i+4]) {
+            for (int i = 0; i < data.size() - 4; i++) {
+                for (char &ch: data[i + 4]) {
                     if (!isdigit(ch)) throw WrongFormatMetaFileException();
                 }
             }
@@ -84,8 +84,7 @@ void File::start() {
     }
 }
 
-string File::getId(string reserveId)
-{
+string File::getId(string reserveId) {
     //resource/resernum.txt
     ifstream datafile(rootPath + "resource/resernum.txt");
     vector<vector<string>> vec;
@@ -103,7 +102,7 @@ string File::getId(string reserveId)
         vec.push_back(v);
     }
     datafile.close();
-    return  vec[stoi(reserveId)][1];
+    return vec[stoi(reserveId)][1];
 }
 
 vector<vector<string>> File::getAllUsers() {
@@ -257,17 +256,22 @@ void File::addNewUser(vector<string> newUser) { //새로운 user의 이름, 전화번호를
     string num = "";
     //meta.txt 수정
     try {    //metadata 파일 format 확인
-        if (metaData.size() != 4) throw WrongFormatMetaFileException();
+        if (metaData.size() != 13) throw WrongFormatMetaFileException();
         num = to_string(stoi(metaData[2]) + 1);
         metaData[2] = num;
     }
     catch (exception &e) {
         exceptionMannager(e);
     }
+
     try {    //metadata 파일 존재 확인
         file.open(rootPath + "resource/meta.txt");
         if (!file.is_open()) throw NotExistMetaFileException();
         file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
+        for (int i = 4; i < 13; ++i) {
+            file << metaData[i] << "\t";
+        }
+        file << "\n";
         file.close();
     }
     catch (exception &e) {
@@ -337,17 +341,21 @@ void File::setBooking(string date, vector<vector<string>> data) {
     vector<string> metaData;
     try {
         metaData = getMetaData();
-        if (metaData.size() != 4) throw WrongFormatMetaFileException();
+        if (metaData.size() != 13) throw WrongFormatMetaFileException();
         metaData[3] = to_string(stoi(metaData[3]) + 1);
-
     }
     catch (exception &e) {
         exceptionMannager(e);
     }
+
     try {
         file.open(rootPath + "resource/meta.txt");
         if (!file.is_open()) throw NotExistMetaFileException();
-        file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
+        file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3] + "\n";
+        for (int i = 4; i < 13; ++i) {
+            file << metaData[i] << "\t";
+        }
+        file << "\n";
         file.close();
     }
     catch (exception &e) {
@@ -355,21 +363,20 @@ void File::setBooking(string date, vector<vector<string>> data) {
     }
 }
 
-string File::getRoomCapacity(string roomNum)
-{
-    return getMetaData()[3+stoi(roomNum)];
+string File::getRoomCapacity(string roomNum) {
+    return getMetaData()[3 + stoi(roomNum)];
 }
 
 void File::addReserNum(string num, string userId) {
     //resource/resernum.txt
     ofstream file;
-    file.open(rootPath+"resource/resernum.txt", ios::out | ios::app);
+    file.open(rootPath + "resource/resernum.txt", ios::out | ios::app);
     file.seekp(-1, ios::end);
-    file << num<<"\t"<<userId<<"\n";
+    file << num << "\t" << userId << "\n";
     file.close();
 }
 
-void File::changeStudyRoom(vector <string> changeDate) {//reserveId, [date, time, changeStudyRoomId]가 담긴 벡터
+void File::changeStudyRoom(vector<string> changeDate) {//reserveId, [date, time, changeStudyRoomId]가 담긴 벡터
     string user_id = getId(changeDate[0]);
     vector<vector<string>> data;
     int target;
