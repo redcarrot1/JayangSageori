@@ -5,7 +5,7 @@
 using namespace std;
 
 vector<vector<string>> Optimize::optimize(string date, string startTime, string endTime, string peopleNumStr, string roomIdStr) {
-    // 반환: 최적화 완료 후의 스터디 룸 예약 현황. (현재 예약하고자 하는 정보는 들어가있지 않습니다.)
+    // 반환: 최적화 완료 후의 스터디 룸 예약 현황. (현재 예약하고자 하는 정보는 들어가 있지 않습니다.)
     vector<vector<string>> data = File::getBooking(date);
     int roomId = stoi(roomIdStr), peopleNum = stoi(peopleNumStr);
 
