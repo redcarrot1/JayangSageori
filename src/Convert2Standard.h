@@ -18,6 +18,7 @@ private:
     static string stdTime(string time);      //시간을 표준형식으로 바꾸는 메소드
     static string correctTime(string time);  //시간 보정 메소드
     static string stdRoomID(string roomID);    //방 번호를 표준형식으로 바꾸는 메소드
+    static string stdPersonNum(string person);      //예약인원을 표준형식으로 바꾸는 메소드
 public:
     Convert2Standard() = delete;
     static string stdCommand(string command, Window window);

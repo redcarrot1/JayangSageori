@@ -276,6 +276,28 @@ string Convert2Standard::stdRoomID(string roomID) {
     return std;
 }
 
+string Convert2Standard::stdPersonNum(string person) {
+    //1.길이 확인
+    size_t length = person.length();
+    string std = "";
+    if (length > 2 || length < 1) {
+        throw WrongLengthArgumentException(person, "1-2");
+    }
+    //2.문자확인
+    for (int i=0 ; i<length ; i++) {
+        if (!isdigit(person[i])) {
+            throw WrongCharArgumentException(person, person[i]);  // 잘못된 문자
+        }
+        if( length==2 && i==0 && person[i]=='0' ) {  // 2글자인데 첫글자가 0이면 삽입 안함
+            ;
+        }
+        else {
+            std.push_back(person[i]);
+        }
+    }
+    return std;
+}
+
 /*public*/
 vector<string> Convert2Standard::convertSign(vector<string> argv) {
     // 인자 개수 반드시 2개
@@ -291,29 +313,33 @@ vector<string> Convert2Standard::convertSign(vector<string> argv) {
 }
 
 vector<string> Convert2Standard::convertBook(vector<string> argv) {
-    // 인자 개수 반드시 4개
-    // 1.날짜, 2.방번호, 3,4.시간
+    // 인자 개수 반드시 5개
+    // 1.날짜, 2.방번호, 3,4.시간, 5. 예약인원
     vector<string> returnArgv;
     size_t argNum = argv.size() - 1;
-    if (argNum != 4) {
+    if (argNum != 5) {
         throw WrongNumArgumentException("book");
     }
     returnArgv.push_back(stdDate(argv.at(1)));
     returnArgv.push_back(stdRoomID(argv.at(2)));
     returnArgv.push_back(stdTime(argv.at(3)));
     returnArgv.push_back(stdTime(argv.at(4)));
+    returnArgv.push_back(stdPersonNum(argv.at(5)));
     return returnArgv;
 }
 
 vector<string> Convert2Standard::convertList(vector<string> argv) {
-    // 인자 개수 0개 또는 1개
-    // 날짜
+    // 인자 개수 1개 또는 2개
+    // 예약인원 또는 예약인원, 날짜
     vector<string> returnArgv;
     size_t argNum = argv.size() - 1;
 
-    if (argNum == 0) return {};
-    else if (argNum == 1) {
-        returnArgv.push_back(stdDate(argv.at(1)));
+    if (argNum == 1) {
+        returnArgv.push_back(stdPersonNum(argv.at(1)));
+    }
+    else if (argNum == 2) {
+        returnArgv.push_back(stdPersonNum(argv.at(1)));
+        returnArgv.push_back(stdDate(argv.at(2)));
     }
     else {
         throw WrongNumArgumentException("list");
