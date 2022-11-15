@@ -87,7 +87,7 @@ void Help::printHelp(Window window, const string &command) {
                                   {"예약할 날짜를 입력합니다.", "예약할 스터디룸 번호를 입력합니다.(1~9)", "이용 시작 시간을 입력합니다.",
                                    "이용 종료 시간을 입력합니다.", "예약할 인원수를 입력합니다."});
         else if (command == "list")
-            commandDetailTemplate("list", "스터디룸의 예약 현황을 출력합니다..", {"1", "2"},
+            commandDetailTemplate("list", "스터디룸의 예약 현황을 출력합니다.", {"1", "2", "1 2"},
                                   {"예약할 인원수를 입력합니다.", "스터디룸의 예약 현황을 확인할 날짜를 입력합니다."});
         else throw UnableCommandException(command, window, "command");
     }
