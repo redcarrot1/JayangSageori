@@ -14,6 +14,5 @@ private:
 public:
     Optimize() = delete;
 
-    static vector<vector<string>>
-    optimize(string date, string startTime, string endTime, string peopleNum, string roomId);
+    static vector<vector<string>> optimize(string date, string startTime, string endTime, string roomId);
 };

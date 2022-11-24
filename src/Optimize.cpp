@@ -4,15 +4,17 @@
 
 using namespace std;
 
-vector<vector<string>> Optimize::optimize(string date, string startTime, string endTime, string peopleNumStr, string roomIdStr) {
+vector<vector<string>> Optimize::optimize(string date, string startTime, string endTime, string roomIdStr) {
     // 반환: 최적화 완료 후의 스터디 룸 예약 현황. (현재 예약하고자 하는 정보는 들어가 있지 않습니다.)
     vector<vector<string>> data = File::getBooking(date);
-    int roomId = stoi(roomIdStr), peopleNum = stoi(peopleNumStr);
+    int roomId = stoi(roomIdStr);
 
     int startTimeIndex = convertTimeToIndex(startTime), endTimeIndex = convertTimeToIndex(endTime);
     for (int i = startTimeIndex; i < endTimeIndex; i++) {
         if (data[roomId][i] != "0") {
-            if (!go(data, stoi(data[roomId][i]), roomId, peopleNum, i)) return {{}}; // 실패
+            if (!go(data, stoi(data[roomId][i]), roomId,
+                    stoi(File::getReserNum(data[roomId][i])), i))
+                return {{}}; // 실패
         }
     }
     return data; // 성공
