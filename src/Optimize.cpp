@@ -29,7 +29,7 @@ bool Optimize::go(vector<vector<string>> &data, int reserveId, int roomId, int p
         int limitNum = stoi(File::getRoomCapacity(to_string(id)));
         if (limitNum < peopleNum) continue;
 
-        if (data[roomId][timeIndex] == "0") possibleStudyRoom.push_back({0, id, limitNum - peopleNum});
+        if (data[id][timeIndex] == "0") possibleStudyRoom.push_back({0, id, limitNum - peopleNum});
         else if (stoi(File::getReserNum(data[id][timeIndex])) < peopleNum) {
             possibleStudyRoom.push_back({stoi(data[id][timeIndex]), id, limitNum - peopleNum});
         }
