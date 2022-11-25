@@ -8,6 +8,7 @@
 #include "Parsing.h"
 #include "User.h"
 #include "File.h"
+#include "Optimize.h"
 
 using namespace std;
 
@@ -18,6 +19,7 @@ private:
     string sRoomNumber;
     string sUseStartTime;
     string sUseEndTime;
+    string sPeopleNum;
 
     int startIndex;
     int endIndex;
@@ -28,6 +30,7 @@ private:
     int startMin;
     int endHour;
     int endMin;
+    int peopleNum;
 
     int sIndex, eIndex;
     string userId;
@@ -44,9 +47,10 @@ private:
 
     void validDate();
     void validRoomNumber();
+    void validPeopleNumber();
 
 public:
-    Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId);
+    Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId, string sPeopleNum);
 
     void excuteBook();
 };

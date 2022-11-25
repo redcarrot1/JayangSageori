@@ -1,9 +1,10 @@
 #include "List.h"
 
-void List::excuteList(string date) {
+void List::excuteList(string peopleNum, string date) {
     validDate(date);
 
     vector<vector<string>> fileData = File::getBooking(date);
+
 
     cout << date << " 스터디룸 상태입니다." << endl;
     cout << left << setw(6) << "스터디룸 ";
@@ -23,7 +24,8 @@ void List::excuteList(string date) {
     for (int i = 1; i < 10; i++) {
         cout << left << setw(7) << i;
         for (int j = 0; j < 22; j++) {
-            if (fileData[i][j] == "0") cout << left << setw(7) << " 가능 ";
+            vector<vector<string>> newfileData = File::getBooking(date);
+            if (Optimize::go(newfileData, stoi(fileData[i][j]), i, stoi(peopleNum), j)) cout << left << setw(7) << " 가능 ";
             else cout << left << setw(7) << " X ";
         }
         cout << endl;
@@ -63,7 +65,7 @@ void List::validDate(string date) {
 
     user_stime.tm_year = inputYear - 1900;   // 주의 :년도는 1900년부터 시작
     user_stime.tm_mon = inputMonth - 1;      // 주의 :월은 0부터 시작
-    user_stime.tm_mday = inputDay+1;
+    user_stime.tm_mday = inputDay + 1;
     user_stime.tm_hour = 0;
     user_stime.tm_min = 0;
     user_stime.tm_sec = 0;
