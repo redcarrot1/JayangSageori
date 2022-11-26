@@ -25,12 +25,25 @@ void List::excuteList(string peopleNum, string date) {
         cout << left << setw(7) << i;
         for (int j = 0; j < 22; j++) {
             vector<vector<string>> newfileData = File::getBooking(date);
-            if (Optimize::go(newfileData, stoi(fileData[i][j]), i, stoi(peopleNum), j)) cout << left << setw(7) << " 가능 ";
+            string hour = to_string(j/2 + 9);
+            int min = j % 2;
+            string minute;
+            string time;
+            if (hour.length() == 1) time = "0" + hour;
+            if (min == 0) minute = "00";
+            else minute = "30";
+            time = hour + minute;
+
+            cout<<"[" << hour << " : " << minute <<"]" << Optimize::optimize(date, time, time, to_string(i)).size() << endl;
+            if (Optimize::optimize(date, time, time, to_string(i)).size() != 1) {
+                cout << left << setw(7) << " 가능 ";
+            }
             else cout << left << setw(7) << " X ";
         }
         cout << endl;
     }
 }
+
 
 void List::validDate(string date) {
     int inputYear = stoi(date.substr(0, 4));

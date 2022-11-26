@@ -35,9 +35,11 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
 
     sdate.erase(remove(sdate.begin(), sdate.end(), '-'), sdate.end());
     this->sdate = sdate;
-    cout << "Error? " << endl;
-    bookFileData = Optimize::optimize(this->sdate, this->sUseStartTime, this->sUseEndTime, this->sRoomNumber);
-    cout << "Error clear : " << bookFileData.size() << endl;
+    bookFileData = { {} };
+    if (stoi(File::getMetaData()[3 + stoi(sRoomNumber)]) >= stoi(sPeopleNum)) {
+        bookFileData = Optimize::optimize(this->sdate, this->sUseStartTime, this->sUseEndTime, this->sRoomNumber);
+
+    }
     userData = File::getUserData(userId);
 }
 
