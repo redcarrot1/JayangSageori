@@ -36,10 +36,14 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
     sdate.erase(remove(sdate.begin(), sdate.end(), '-'), sdate.end());
     this->sdate = sdate;
     bookFileData = { {} };
+    cout << "Book File Data Befored Loading result : " << bookFileData.size() << endl;
     if (stoi(File::getMetaData()[3 + stoi(sRoomNumber)]) >= stoi(sPeopleNum)) {
+        cout << "updating BookFileData " << endl;
         bookFileData = Optimize::optimize(this->sdate, this->sUseStartTime, this->sUseEndTime, this->sRoomNumber);
+        cout << "updating Success BookFileData " << endl;
 
     }
+    cout << "Book File Data Loading result : " << bookFileData.size() << endl;
     userData = File::getUserData(userId);
 }
 
@@ -126,15 +130,18 @@ void Book::updateBookfile() {
     data[3] = to_string(stoi(data[3]) + 1);
     File::setUserData(userId, userData);
     File::setBooking(sOriginDate, bookFileData);
-    cout << "error start" << endl;
+    cout << "addReserNum start" << endl;
     File::addReserNum(sPeopleNum, userId);
-    cout << "error end" << endl;
+    cout << "addReserNum end" << endl;
 }
 
 void Book::excuteBook() {
     if (checkReservation()) {
+        cout << "Can Resulvation" << endl;
         updateBookFileData();
+        cout << "Update Book File Data Success" << endl;
         updateBookfile();
+        cout << "Updata Book File Success" << endl;
         cout << this->sOriginDate << " " << this->sRoomNumber << "번 스터디룸 " << this->sUseStartTime << " ~ "
             << this->sUseEndTime << " 로 정상 예약되었습니다." << endl;
     }
@@ -214,8 +221,7 @@ void Book::validRoomNumber() {
 
 void Book::validPeopleNumber() {
     vector<string> data = File::getMetaData();
-    int i = stoi(data[4 + iRoomNumber]);
-
+    int i = stoi(data[3 + iRoomNumber]);
     if (this->peopleNum > i)
         throw WrongRuleArgumentException(this->sRoomNumber, "스터디룸의 최대 예약 가능 인원수를 초과하였습니다.");
 }

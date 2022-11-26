@@ -33,9 +33,7 @@ void List::excuteList(string peopleNum, string date) {
             if (min == 0) minute = "00";
             else minute = "30";
             time = hour + minute;
-
-            cout<<"[" << hour << " : " << minute <<"]" << Optimize::optimize(date, time, time, to_string(i)).size() << endl;
-            if (Optimize::optimize(date, time, time, to_string(i)).size() != 1) {
+            if (stoi(File::getMetaData()[3 + i]) >= stoi(peopleNum) && Optimize::optimize(date, time, time, to_string(i)).size() != 1) {
                 cout << left << setw(7) << " °¡´É ";
             }
             else cout << left << setw(7) << " X ";
