@@ -2,10 +2,9 @@
 
 void List::excuteList(string peopleNum, string date) {
     validDate(date);
-
+    validPeopleNumber(peopleNum);
     vector<vector<string>> fileData = File::getBooking(date);
-
-
+    
     cout << date << " 스터디룸 상태입니다." << endl;
     cout << left << setw(6) << "스터디룸 ";
     for (int i = 9; i < 20; ++i) {
@@ -106,3 +105,10 @@ void List::validDate(string date) {
 
 }
 
+void List::validPeopleNumber(string peopleNum) {
+    vector<string> data = File::getMetaData();
+    int i = stoi(data[3 + stoi(peopleNum)]);
+    if (stoi(peopleNum) < 1) {
+        throw WrongRuleArgumentException(peopleNum, "예약 인원수는 1보다 커야합니다.");
+    }
+}
