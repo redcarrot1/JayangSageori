@@ -28,12 +28,24 @@ void List::excuteList(string peopleNum, string date) {
             string hour = to_string(j/2 + 9);
             int min = j % 2;
             string minute;
-            string time;
-            if (hour.length() == 1) time = "0" + hour;
+            string startTime;
+            string endTime;
+            if (hour.length() == 1) hour = "0" + hour;
             if (min == 0) minute = "00";
             else minute = "30";
-            time = hour + minute;
-            if (stoi(File::getMetaData()[3 + i]) >= stoi(peopleNum) && Optimize::optimize(date, time, time, to_string(i)).size() != 1) {
+            
+            startTime = hour+":"+ minute;
+            
+            if (min == 0) minute = "30";
+            else {
+                minute = "00";
+                hour = to_string(j / 2 + 10);
+            }
+                
+            if (hour.length() == 1) hour = "0" + hour;
+            
+            endTime = hour + ":" + minute;
+            if (stoi(File::getMetaData()[3 + i]) >= stoi(peopleNum) && Optimize::optimize(date, startTime, endTime, to_string(i)).size() != 1) {
                 cout << left << setw(7) << " °¡´É ";
             }
             else cout << left << setw(7) << " X ";
