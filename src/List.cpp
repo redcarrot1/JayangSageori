@@ -18,10 +18,15 @@ void List::excuteList(string peopleNum, string date) {
         else time = hour + ":30";
         cout << left << setw(6) << time;
     }
+    /*
+    signin test 12341234
+    book
+    list 2
+    */
 
     cout << endl;
     for (int i = 1; i < 10; i++) {
-        cout << left << setw(7) << i;
+        cout << i << " (" << File::getRoomCapacity(to_string(i)) << "ÀÎ½Ç)";
         for (int j = 0; j < 22; j++) {
             vector<vector<string>> newfileData = File::getBooking(date);
             string hour = to_string(j/2 + 9);
