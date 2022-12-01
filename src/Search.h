@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <set>
 
 #include "File.h"
 #include "Parsing.h"

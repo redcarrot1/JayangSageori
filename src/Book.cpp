@@ -82,7 +82,7 @@ bool comp(vector<string>& v1, vector<string>& v2) {
 
 
     // 3. 종료 시각 비교
-    string end1 = v1[3], end2 = v2[3];
+    string end1 = v1[v1.size()-2], end2 = v2[v2.size()-2];
     end1.erase(remove(end1.begin(), end1.end(), ':'), end1.end());
     end2.erase(remove(end2.begin(), end2.end(), ':'), end2.end());
 
@@ -91,7 +91,7 @@ bool comp(vector<string>& v1, vector<string>& v2) {
 
 
     // 4. 방 번호 비교
-    string num1 = v1[4], num2 = v2[4];
+    string num1 = v1[v1.size()-1], num2 = v2[v2.size() -1];
     if (num1[0] - '0' > num2[0] - '0') return false;
     else return true;
 }
@@ -111,7 +111,7 @@ void Book::updateBookFileData() {
     newData.push_back(sUseEndTime);
     newData.push_back(sRoomNumber);
     userData.push_back(newData);
-    //sort(userData.begin(), userData.end(), comp); 
+    sort(userData.begin(), userData.end(), comp); 
 }
 /*
 signin minho 01026350303

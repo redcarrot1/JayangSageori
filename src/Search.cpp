@@ -60,21 +60,99 @@ void Search::searchByNameAndPhone(const string &name, const string &phone) {
                 break;
             }
         }
+/*
+signin admin 01012345678
+search
+ask 7777777
+
+*/
+
+        int count=0;
+        for (int i = 0; i < userInfo.size(); i++)
+            if (count < (userInfo[i].size() - 2) / 3)
+                count = (userInfo[i].size() - 2) / 3;
+        
 
         cout << "이름\t\t\t전화번호" << endl;
         cout << info[location][1] << "\t\t\t" << info[location][2] << endl << endl;
         cout << "예약 현황" << endl << endl;
-        cout << "예약 날짜" << "\t" << "이용 시간" << "\t" << "룸 번호" << "\t	" << "예약 번호" << endl << endl;
-        for (int i = change; i < userInfo.size(); i++) {
-            cout << userInfo[i][1] << " | " << userInfo[i][2] << " ~ " << userInfo[i][3] << " | \t" << userInfo[i][4]
-                 << "\t|\t" << userInfo[i][0] << endl << endl;
-        }
+        cout << "예약 날짜" << "\t" << "이용 시간" << "\t" << "룸 번호";
+        for (int i = 0; i < count/3.3; i++)
+            cout << "\t";
+        if (count == 9)
+            cout << "\t";
 
+        cout << "\t예약 번호" << endl << endl;
+        for (int i = change; i < userInfo.size(); i++) {
+            set<string> room;
+            set<string> ::iterator iter;
+            int roomCount = (userInfo[i].size()-2)/3;
+
+            for (int j = 0; j < roomCount; j++) {
+                room.insert(userInfo[i][4 + 3 * j]);
+            }
+
+
+            cout << userInfo[i][1] << " | " << userInfo[i][2] << " ~ " << userInfo[i][userInfo[i].size() - 2] << " | \t";
+            for (iter = room.begin(); iter != room.end(); iter++) {
+                cout << *iter << ", ";
+            }
+            if (roomCount != 6 || count != 6)
+                cout << "\b\b \b\t";
+            else
+                cout << "\b\b \b";
+            
+
+            if ((roomCount != 9 && count == 9 && roomCount != 6) && !((count == 7 || count == 8) && roomCount == 6))
+                cout << "\t";
+
+            for (int j = 0; j < int(count / 3.3) - int(roomCount / 3.3); j++) {
+                cout << "\t";
+            }
+               
+
+            cout<<"| \t" << userInfo[i][0] << endl << endl;
+        }
+        
+        //수정할 곳
         cout << endl << "이용 현황" << endl << endl;
-        cout << "예약 날짜" << "\t" << "이용 시간" << "\t" << "룸 번호" << "\t	" << "예약 번호" << endl << endl;
+        cout << "예약 현황" << endl << endl;
+        cout << "예약 날짜" << "\t" << "이용 시간" << "\t" << "룸 번호";
+        for (int i = 0; i < count / 3.3; i++)
+            cout << "\t";
+        if (count == 9)
+            cout << "\t";
+
+        cout << "\t예약 번호" << endl << endl;
         for (int i = 0; i < change; i++) {
-            cout << userInfo[i][1] << " | " << userInfo[i][2] << " ~ " << userInfo[i][3] << " | \t" << userInfo[i][4]
-                 << "\t|\t" << userInfo[i][0] << endl << endl;
+            set<string> room;
+            set<string> ::iterator iter;
+            int roomCount = (userInfo[i].size() - 2) / 3;
+
+            for (int j = 0; j < roomCount; j++) {
+                room.insert(userInfo[i][4 + 3 * j]);
+            }
+
+
+            cout << userInfo[i][1] << " | " << userInfo[i][2] << " ~ " << userInfo[i][userInfo[i].size() - 2] << " | \t";
+            for (iter = room.begin(); iter != room.end(); iter++) {
+                cout << *iter << ", ";
+            }
+            if (roomCount != 6 || count != 6)
+                cout << "\b\b \b\t";
+            else
+                cout << "\b\b \b";
+
+
+            if (roomCount != 9 && count == 9 && roomCount != 6)
+                cout << "\t";
+
+            for (int j = 0; j < int(count / 3.3) - int(roomCount / 3.3); j++) {
+                cout << "\t";
+            }
+
+
+            cout << "| \t" << userInfo[i][0] << endl << endl;
         }
     }
     catch (exception &e) {
