@@ -1,10 +1,10 @@
 #include "List.h"
 
-void List::excuteList(string date) {
+void List::excuteList(string peopleNum, string date) {
     validDate(date);
-
+    validPeopleNumber(peopleNum);
     vector<vector<string>> fileData = File::getBooking(date);
-
+    
     cout << date << " 스터디룸 상태입니다." << endl;
     cout << left << setw(6) << "스터디룸 ";
     for (int i = 9; i < 20; ++i) {
@@ -18,17 +18,46 @@ void List::excuteList(string date) {
         else time = hour + ":30";
         cout << left << setw(6) << time;
     }
+    /*
+    signin test 12341234
+    book
+    list 2
+    */
 
     cout << endl;
     for (int i = 1; i < 10; i++) {
-        cout << left << setw(7) << i;
+        cout << i << " (" << File::getRoomCapacity(to_string(i)) << "인실)";
         for (int j = 0; j < 22; j++) {
-            if (fileData[i][j] == "0") cout << left << setw(7) << " 가능 ";
+            vector<vector<string>> newfileData = File::getBooking(date);
+            string hour = to_string(j/2 + 9);
+            int min = j % 2;
+            string minute;
+            string startTime;
+            string endTime;
+            if (hour.length() == 1) hour = "0" + hour;
+            if (min == 0) minute = "00";
+            else minute = "30";
+            
+            startTime = hour+":"+ minute;
+            
+            if (min == 0) minute = "30";
+            else {
+                minute = "00";
+                hour = to_string(j / 2 + 10);
+            }
+                
+            if (hour.length() == 1) hour = "0" + hour;
+            
+            endTime = hour + ":" + minute;
+            if (stoi(File::getMetaData()[3 + i]) >= stoi(peopleNum) && Optimize::optimize(date, startTime, endTime, to_string(i)).size() != 1) {
+                cout << left << setw(7) << " 가능 ";
+            }
             else cout << left << setw(7) << " X ";
         }
         cout << endl;
     }
 }
+
 
 void List::validDate(string date) {
     int inputYear = stoi(date.substr(0, 4));
@@ -63,7 +92,7 @@ void List::validDate(string date) {
 
     user_stime.tm_year = inputYear - 1900;   // 주의 :년도는 1900년부터 시작
     user_stime.tm_mon = inputMonth - 1;      // 주의 :월은 0부터 시작
-    user_stime.tm_mday = inputDay+1;
+    user_stime.tm_mday = inputDay + 1;
     user_stime.tm_hour = 0;
     user_stime.tm_min = 0;
     user_stime.tm_sec = 0;
@@ -81,3 +110,10 @@ void List::validDate(string date) {
 
 }
 
+void List::validPeopleNumber(string peopleNum) {
+    vector<string> data = File::getMetaData();
+    int i = stoi(data[3 + stoi(peopleNum)]);
+    if (stoi(peopleNum) < 1) {
+        throw WrongRuleArgumentException(peopleNum, "예약 인원수는 1보다 커야합니다.");
+    }
+}

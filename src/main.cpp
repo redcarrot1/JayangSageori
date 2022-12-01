@@ -35,7 +35,7 @@ void printPrompt() {
     else if (window == Window::AdminSearch) cout << "Admin/Search > ";
 }
 
-void windowMain(string &command, vector<string> &argv) {
+void windowMain(string& command, vector<string>& argv) {
     if (command == "signin") {
         vector<string> stdArgv = Convert2Standard::convertSign(argv);
         user = SignIn::signin(stdArgv);
@@ -64,7 +64,7 @@ void windowMain(string &command, vector<string> &argv) {
     }
 }
 
-void windowUser(string &command, vector<string> &argv) {
+void windowUser(string& command, vector<string>& argv) {
     if (command == "book") {
         if (argv.size() == 1) window = Window::UserBook;
         else throw WrongNumArgumentException("book");
@@ -87,21 +87,21 @@ void windowUser(string &command, vector<string> &argv) {
     }
 }
 
-void windowUserBook(string &command, vector<string> &argv) {
+void windowUserBook(string& command, vector<string>& argv) {
     if (command == "book") {
         vector<string> stdArgv = Convert2Standard::convertBook(argv);
-        Book book(stdArgv[0], stdArgv[1], stdArgv[2], stdArgv[3], user.getUserId());
+        Book book(stdArgv[0], stdArgv[1], stdArgv[2], stdArgv[3], user.getUserId(), stdArgv[4]);
         book.excuteBook();
     }
     else if (command == "list") {
         vector<string> stdArgv = Convert2Standard::convertList(argv);
-        if (stdArgv.empty()) {
+        if (stdArgv.size() == 1) {
             time_t timer = time(NULL);
-            struct tm *t = localtime(&timer);
+            struct tm* t = localtime(&timer);
             string arg = to_string(t->tm_year + 1900) + "-" + to_string(t->tm_mon + 1) + "-" + to_string(t->tm_mday);
-            List::excuteList(arg);
+            List::excuteList(stdArgv[0], arg);
         }
-        else List::excuteList(stdArgv[0]);
+        else List::excuteList(stdArgv[0], stdArgv[1]);
     }
     else if (command == "back") {
         if (argv.size() == 1) window = Window::User;
@@ -117,7 +117,7 @@ void windowUserBook(string &command, vector<string> &argv) {
     }
 }
 
-void windowUserSearch(string &command, vector<string> &argv) {
+void windowUserSearch(string& command, vector<string>& argv) {
     if (command == "check") {
         if (argv.size() == 1) Check::excuteCheck(user.getUserId());
         else throw WrongNumArgumentException("check");
@@ -136,7 +136,7 @@ void windowUserSearch(string &command, vector<string> &argv) {
     }
 }
 
-void windowAdmin(string &command, vector<string> &argv) {
+void windowAdmin(string& command, vector<string>& argv) {
     if (command == "search") {
         if (argv.size() == 1) window = Window::AdminSearch;
         else throw WrongNumArgumentException("search");
@@ -155,7 +155,7 @@ void windowAdmin(string &command, vector<string> &argv) {
     }
 }
 
-void windowAdminSearch(string &command, vector<string> &argv) {
+void windowAdminSearch(string& command, vector<string>& argv) {
     if (command == "ask") {
         vector<string> stdArgv = Convert2Standard::convertSearch(argv);
         if (stdArgv.empty()) Search::searchAll();
@@ -207,7 +207,7 @@ int main() {
                 else if (window == Window::AdminSearch) windowAdminSearch(command, argv);
             }
         }
-        catch (exception &e) {
+        catch (exception& e) {
             exceptionMannager(e); //오류에 대한 정보
         }
     }
