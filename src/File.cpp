@@ -267,7 +267,7 @@ void File::addNewUser(vector<string> newUser) { //새로운 user의 이름, 전화번호를
     try {    //metadata 파일 존재 확인
         file.open(rootPath + "resource/meta.txt");
         if (!file.is_open()) throw NotExistMetaFileException();
-        file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3];
+        file << metaData[0] + "\t" + metaData[1] + "\n" + metaData[2] + "\n" + metaData[3] + "\n";
         for (int i = 4; i < 13; ++i) {
             file << metaData[i] << "\t";
         }
