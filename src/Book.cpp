@@ -55,13 +55,6 @@ bool Book::checkReservation() {
     return true;
 }
 
-/*
-signin testa 12341234
-book
-book 230213 1 0900 1100 2
-
-*/
-
 bool comp(vector<string>& v1, vector<string>& v2) {
     // 1. 예약 날짜 비교
     string date1 = v1[1], date2 = v2[1];
@@ -113,11 +106,6 @@ void Book::updateBookFileData() {
     userData.push_back(newData);
     sort(userData.begin(), userData.end(), comp); 
 }
-/*
-signin minho 01026350303
-book
-book 221127 1 0900 1100 2
-*/
 
 //book book x   
 void Book::updateBookfile() {

@@ -60,12 +60,6 @@ void Search::searchByNameAndPhone(const string &name, const string &phone) {
                 break;
             }
         }
-/*
-signin admin 01012345678
-search
-ask 7777777
-
-*/
 
         int count=0;
         for (int i = 0; i < userInfo.size(); i++)
@@ -102,6 +96,8 @@ ask 7777777
             else
                 cout << "\b\b \b";
             
+            if (count > 6 && roomCount == 6 &&count != 9)
+                cout << "\b";
 
             if ((roomCount != 9 && count == 9 && roomCount != 6) && !((count == 7 || count == 8) && roomCount == 6))
                 cout << "\t";
@@ -144,7 +140,10 @@ ask 7777777
                 cout << "\b\b \b";
 
 
-            if (roomCount != 9 && count == 9 && roomCount != 6)
+            if (count > 6 && roomCount == 6 && count != 9)
+                cout << "\b";
+
+            if ((roomCount != 9 && count == 9 && roomCount != 6) && !((count == 7 || count == 8) && roomCount == 6))
                 cout << "\t";
 
             for (int j = 0; j < int(count / 3.3) - int(roomCount / 3.3); j++) {
