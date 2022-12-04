@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 #include "ExceptionClass.h"
 #include "Parsing.h"
 #include "User.h"
