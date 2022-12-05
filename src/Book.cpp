@@ -35,10 +35,114 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
 
     sdate.erase(remove(sdate.begin(), sdate.end(), '-'), sdate.end());
     this->sdate = sdate;
-    bookFileData = { {} };
+    vector<vector<string>> beforeData = File::getBooking(this->sdate);
+    bookFileData = File::getBooking(sdate);
+    for (int i = sIndex; i < eIndex; i++) {
+        string k = File::getReserNum(bookFileData[iRoomNumber][i]);
+        int reservedNum = stoi(k);
+        if (reservedNum > peopleNum) {
+            throw WrongRuleArgumentException(sPeopleNum, "기존 예약 인원보다 더 커야 예약이 가능합니다."); 
+        } }
     if (stoi(File::getMetaData()[3 + stoi(sRoomNumber)]) >= stoi(sPeopleNum)) {
         bookFileData = Optimize::optimize(this->sdate, this->sUseStartTime, this->sUseEndTime, this->sRoomNumber);
 
+    }
+    bool flag = false;
+    vector<string> changed_id;
+    if (checkReservation()) {
+        for (int i = 0; i < bookFileData.size(); i++)
+            for (int j = 0; j < bookFileData[i].size(); j++)
+                if (bookFileData[i][j] != beforeData[i][j]) {
+                    changed_id.push_back(bookFileData[i][j]);
+                    flag = true;
+                }
+    }
+
+/*
+signin park 010123456
+book
+book 20221205 6 0900 1100 2
+book 20221205 6 0930 1000 3
+*/
+    if (flag) {
+        vector<vector<string>> changed;//예약 번호, 시작 timeindex, 종료 timeindex, 방번호
+        for (int j = 0; j < beforeData[0].size(); j++) {
+            for (int i = 1; i < beforeData.size(); i++) {
+                if (find(changed_id.begin(), changed_id.end(), bookFileData[i][j]) != changed_id.end()) {//바뀐곳인지 확인
+                    if (changed.size() == 0) {
+                        vector<string> line;
+                        line.push_back(bookFileData[i][j]);//예약 번호               
+                        line.push_back(this->sdate);//날짜
+                        line.push_back(to_string(j));//시작 timeIndex
+                        line.push_back(to_string(j));//종료 timeIndex
+                        line.push_back(to_string(i));//방번호
+                        changed.push_back(line);
+                    }
+                    else {
+                        for (int k = 0; k < changed.size(); k++) {
+                            if (changed[k][0] == bookFileData[i][j]) {//changed에 같은 예약 번호있는지 확인
+                                if (changed[k][changed[k].size() - 2] == to_string(j - 1) && changed[k][changed[k].size() - 1] == to_string(i)) { //종료 시간만 연장 새 예약의 시작 시간 == 기존 예약의 종료 시간, 같은 방
+                                    changed[k][changed[k].size() - 2] = to_string(j);
+                                }
+                                else {//방이 바뀌는 경우
+                                    changed[k].push_back(to_string(j));//시작 timeIndex
+                                    changed[k].push_back(to_string(j));//종료 timeindex
+                                    changed[k].push_back(to_string(i));//방번호
+                                }
+                            }
+                            else {
+                                vector<string> line;
+                                line.push_back(bookFileData[i][j]);//예약 번호
+                                line.push_back(this->sdate);//날짜
+                                line.push_back(to_string(j));//시작 timeIndex
+                                line.push_back(to_string(j));//종료 timeIndex
+                                line.push_back(to_string(i));//방번호
+                                changed.push_back(line);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < changed.size(); i++) {
+            changed[i][1].insert(4, "-");
+            changed[i][1].insert(7, "-");
+        }
+
+        for (int k = 0; k < changed.size(); k++) {
+            for (int i = 0; i < (changed[k].size() - 2) / 3; i++) {
+                //start time index            
+                int index = stoi(changed[k][2 + i * 3]);
+                if (index/2 + 9 == 9) {//hour == 9
+                    changed[k][2 + i * 3] = "0" + to_string(index / 2 + 9);//hour
+                    cout << changed[k][2 + i * 3];
+                    changed[k][2 + i * 3].append(":");//std
+                    if (index % 2 == 0) changed[k][2 + i * 3].append("0");
+                    changed[k][2 + i * 3].append(to_string(index % 2 * 30));//minute
+                }
+                else {
+                    changed[k][2 + i * 3] = to_string(index / 2 + 9);//hour
+                    changed[k][2 + i * 3].append(":");//std
+                    if (index % 2 == 0) changed[k][2 + i * 3].append("0");
+                    changed[k][2 + i * 3].append(to_string(index % 2 * 30));//minute
+                }
+                //end time index 
+                index = stoi(changed[k][3 + i * 3]);
+                if ((index + 1) / 2 == 9) {//hour == 9
+                    changed[k][3 + i * 3] = "0"+to_string((index + 1) / 2 + 9); //hour
+                    changed[k][3 + i * 3].append(":");//std
+                    if ((index + 1) % 2 == 0) changed[k][3 + i * 3].append("0");
+                    changed[k][3 + i * 3].append(to_string((index + 1) % 2 * 30));//minute
+                }
+                else {
+                    changed[k][3 + i * 3] = to_string((index + 1) / 2 + 9);//hour
+                    changed[k][3 + i * 3].append(":");//std
+                    if ((index + 1) % 2 == 0) changed[k][3 + i * 3].append("0");
+                    changed[k][3 + i * 3].append(to_string((index + 1) % 2 * 30));//minute
+
+                }
+            }
+        }
     }
     userData = File::getUserData(userId);
 }
@@ -54,13 +158,6 @@ bool Book::checkReservation() {
 
     return true;
 }
-
-/*
-signin testa 12341234
-book
-book 230213 1 0900 1100 2
-
-*/
 
 bool comp(vector<string>& v1, vector<string>& v2) {
     // 1. 예약 날짜 비교
@@ -91,8 +188,9 @@ bool comp(vector<string>& v1, vector<string>& v2) {
 
 
     // 4. 방 번호 비교
-    string num1 = v1[v1.size()-1], num2 = v2[v2.size() -1];
-    if (num1[0] - '0' > num2[0] - '0') return false;
+
+    string num1 = v1.back(), num2 = v2.back();
+    if (stoi(num1) > stoi(num2)) return false;
     else return true;
 }
 
@@ -111,13 +209,10 @@ void Book::updateBookFileData() {
     newData.push_back(sUseEndTime);
     newData.push_back(sRoomNumber);
     userData.push_back(newData);
-    sort(userData.begin(), userData.end(), comp); 
+    cout << userData.size()<<userData[0][1]<<userData[0][2];
+    if (userData.size() != 2)
+      sort(userData.begin(), userData.end()-1, comp); 
 }
-/*
-signin minho 01026350303
-book
-book 221127 1 0900 1100 2
-*/
 
 //book book x   
 void Book::updateBookfile() {
