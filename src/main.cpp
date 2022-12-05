@@ -178,7 +178,7 @@ void windowAdminSearch(string& command, vector<string>& argv) {
 
 // 데이터 파일이 저장되어 있는 폴더로 경로 지정하시면 됩니다.
 // 예를 들어, /kim/desktop/  으로 설정하시면, 해당 폴더 내에 book 폴더, resource 폴더, user 폴더가 있어야 합니다.
-string File::rootPath = "./../";
+string File::rootPath = "../../";
 
 int main() {
     cout << "프로그램을 시작합니다." << endl;
