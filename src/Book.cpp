@@ -228,11 +228,8 @@ void Book::updateBookfile() {
 
 void Book::excuteBook() {
     if (checkReservation()) {
-        cout << "Can Resulvation" << endl;
         updateBookFileData();
-        cout << "Update Book File Data Success" << endl;
         updateBookfile();
-        cout << "Updata Book File Success" << endl;
         cout << this->sOriginDate << " " << this->sRoomNumber << "번 스터디룸 " << this->sUseStartTime << " ~ "
             << this->sUseEndTime << " 로 정상 예약되었습니다." << endl;
     }
