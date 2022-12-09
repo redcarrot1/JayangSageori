@@ -40,7 +40,7 @@ void Check::showReservationList(string userId) {
         }
 
         cout << left << setw(8) << userData[i][0]<<"\t";
-        cout << userData[i][1] << "\t";
+        cout << userData[i][1] << "\t"<<File::getReserNum(userData[i][0])<<"명"<<"\t";
         for (iter = room.begin(); iter != room.end();iter++) {
             cout << *iter<< ", ";
         }
@@ -57,7 +57,7 @@ void Check::showReservationList(string userId) {
 }
 
 void Check::excuteCheck(string userId) {
-    cout << "예약번호\t예약날짜\t스터디룸 번호\t\t\t\t시작시간\t종료시간" << endl;
+    cout << "예약번호\t예약날짜\t인원\t스터디룸 번호\t\t\t\t시작시간\t종료시간" << endl;
     showReservationList(std::move(userId));
 };
 
