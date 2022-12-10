@@ -7,8 +7,6 @@ void Check::showReservationList(string userId) {
     if (row != 0) col = userData[0].size();
 
     for (int i = 0; i < row; i++) {
-        set<string> room;
-        set<string> ::iterator iter;
         int roomCount = (userData[i].size() - 2) / 3;
 
         int inputYear = stoi(userData[i][1].substr(0, 4));
@@ -34,30 +32,21 @@ void Check::showReservationList(string userId) {
         inputDate = mktime(&user_stime);
 
         if (difftime(inputDate, now) < 0) continue;
-
-        for (int j = 0; j < roomCount; j++) {
-            room.insert(userData[i][4 + 3 * j]);
-        }
-
+        
+        string date = userData[i][1];
         cout << left << setw(8) << userData[i][0]<<"\t";
-        cout << userData[i][1] << "\t"<<File::getReserNum(userData[i][0])<<"명"<<"\t";
-        for (iter = room.begin(); iter != room.end();iter++) {
-            cout << *iter<< ", ";
+        for (int j = 0; j < (userData[i].size() - 2) / 3; j++) {
+            if (j != 0)  cout << "\t\t";
+            cout << date << "\t" << File::getReserNum(userData[i][0]) << "명" << "\t";
+            cout << userData[i][4 + 3 * j] << "번 스터디룸\t";
+            cout << userData[i][2+3*j] << "\t\t";
+            cout << userData[i][3 + 3 * j] << endl;
         }
-        cout << "\b\b번 스터디룸\t";
-
-        for (int j = 0; j < 3 - room.size() / 2.5; j++)
-            cout << "\t";
-
- 
-        cout << userData[i][2] << "\t\t";
-        cout << userData[i][userData[i].size()-2];
-        cout << endl;
     }
 }
 
 void Check::excuteCheck(string userId) {
-    cout << "예약번호\t예약날짜\t인원\t스터디룸 번호\t\t\t\t시작시간\t종료시간" << endl;
+    cout << "예약번호\t예약날짜\t인원\t스터디룸 번호\t시작시간\t종료시간" << endl;
     showReservationList(std::move(userId));
 };
 

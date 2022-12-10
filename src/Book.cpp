@@ -40,7 +40,7 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
     for (int i = sIndex; i < eIndex; i++) {
         string k = File::getReserNum(bookFileData[iRoomNumber][i]);
         int reservedNum = stoi(k);
-        if (reservedNum > peopleNum) {
+        if (reservedNum >= peopleNum) {
             throw WrongRuleArgumentException(sPeopleNum, "기존 예약 인원보다 더 커야 예약이 가능합니다.");
         }
     }
@@ -233,6 +233,8 @@ void Book::excuteBook() {
     if (checkReservation()) {
         updateBookFileData();
         updateBookfile();
+        cout << this->sOriginDate << " " << this->sRoomNumber << "번 스터디룸 " << this->sUseStartTime << " ~ "
+            << this->sUseEndTime << " 로 정상 예약되었습니다." << endl;
     }
 }
 
