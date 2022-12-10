@@ -4,7 +4,7 @@ void List::excuteList(string peopleNum, string date) {
     validDate(date);
     validPeopleNumber(peopleNum);
     vector<vector<string>> fileData = File::getBooking(date);
-    
+
     cout << date << " 스터디룸 상태입니다." << endl;
     cout << left << setw(6) << "스터디룸 ";
     for (int i = 9; i < 20; ++i) {
@@ -18,11 +18,6 @@ void List::excuteList(string peopleNum, string date) {
         else time = hour + ":30";
         cout << left << setw(6) << time;
     }
-    /*
-    signin test 12341234
-    book
-    list 2
-    */
 
     cout << endl;
     for (int i = 1; i < 10; i++) {
@@ -37,20 +32,23 @@ void List::excuteList(string peopleNum, string date) {
             if (hour.length() == 1) hour = "0" + hour;
             if (min == 0) minute = "00";
             else minute = "30";
-            
+
             startTime = hour+":"+ minute;
-            
+
             if (min == 0) minute = "30";
             else {
                 minute = "00";
                 hour = to_string(j / 2 + 10);
             }
-                
+
             if (hour.length() == 1) hour = "0" + hour;
-            
+
             endTime = hour + ":" + minute;
-            if (stoi(File::getMetaData()[3 + i]) >= stoi(peopleNum) && Optimize::optimize(date, startTime, endTime, to_string(i)).size() != 1) {
-                cout << left << setw(7) << " 가능 ";
+            if ((stoi(File::getMetaData()[3 + i]) >= stoi(peopleNum)) && (stoi(File::getReserNum(newfileData[i][j])) < stoi(peopleNum))) {  // 제한인원보다 작으며, 예약이 존재할 시 예약의 인원수보다 내 인원수가 더 많아야 optimizer를 수행할 수 있다.
+                if (Optimize::optimize(date, startTime, endTime, to_string(i)).size() > 1) {
+                    cout << left << setw(7) << " 가능 ";
+                }
+                else cout << left << setw(7) << " X ";
             }
             else cout << left << setw(7) << " X ";
         }
