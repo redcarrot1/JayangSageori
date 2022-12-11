@@ -1,6 +1,7 @@
 #include "Book.h"
 
-Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId, string sPeopleNum) {
+Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEndTime, string userId,
+           string sPeopleNum) {
     this->sOriginDate = sdate;
     this->userId = userId;
 
@@ -58,7 +59,6 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
                     flag = true;
                 }
         //예약이 가능한 경우이므로 예약하고자 하는 부분 0 대입
-
         for (int i = sIndex; i < eIndex; i++) {
             bookFileData[iRoomNumber][i] = to_string(0);
         }
@@ -81,7 +81,9 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
                     else {
                         for (int k = 0; k < changed.size(); k++) {
                             if (changed[k][0] == bookFileData[i][j]) {//changed에 같은 예약 번호있는지 확인
-                                if (changed[k][changed[k].size() - 2] == to_string(j - 1) && changed[k][changed[k].size() - 1] == to_string(i)) { //종료 시간만 연장 새 예약의 시작 시간 == 기존 예약의 종료 시간, 같은 방
+                                if (changed[k][changed[k].size() - 2] == to_string(j - 1) &&
+                                    changed[k][changed[k].size() - 1] ==
+                                    to_string(i)) { //종료 시간만 연장 새 예약의 시작 시간 == 기존 예약의 종료 시간, 같은 방
                                     changed[k][changed[k].size() - 2] = to_string(j);
                                     break;
                                 }
@@ -106,8 +108,6 @@ Book::Book(string sdate, string sRoomNumber, string sUseStartTime, string sUseEn
                     }
                 }
             }
-
-
         }
 
         for (int i = 0; i < changed.size(); i++) {
@@ -158,43 +158,35 @@ bool Book::checkReservation() {
     // 예약되어있는지 확인
     if (bookFileData.size() == 1) {
         cout << "[오류] " << sOriginDate << " " << sRoomNumber << "번 스터디룸 " << this->sUseStartTime << " ~ "
-            << this->sUseEndTime << "는 예약 불가능한 상태입니다." << endl;
+             << this->sUseEndTime << "는 예약 불가능한 상태입니다." << endl;
         return false;
     }
-
     return true;
 }
 
-bool comp(vector<string>& v1, vector<string>& v2) {
+bool comp(vector<string> &v1, vector<string> &v2) {
     // 1. 예약 날짜 비교
     string date1 = v1[1], date2 = v2[1];
     date1.erase(remove(date1.begin(), date1.end(), '-'), date1.end());
     date2.erase(remove(date2.begin(), date2.end(), '-'), date2.end());
-
     if (date1 > date2) return false;
     else if (date1 < date2) return true;
-
 
     // 2. 시작 시각 비교
     string start1 = v1[2], start2 = v2[2];
     start1.erase(remove(start1.begin(), start1.end(), ':'), start1.end());
     start2.erase(remove(start2.begin(), start2.end(), ':'), start2.end());
-
     if (start1 > start2) return false;
     else if (start1 < start2) return true;
 
-
     // 3. 종료 시각 비교
-    string end1 = v1[v1.size()-2], end2 = v2[v2.size()-2];
+    string end1 = v1[v1.size() - 2], end2 = v2[v2.size() - 2];
     end1.erase(remove(end1.begin(), end1.end(), ':'), end1.end());
     end2.erase(remove(end2.begin(), end2.end(), ':'), end2.end());
-
     if (end1 > end2) return false;
     else if (end1 < end2) return true;
 
-
     // 4. 방 번호 비교
-
     string num1 = v1.back(), num2 = v2.back();
     if (stoi(num1) > stoi(num2)) return false;
     else return true;
@@ -215,8 +207,7 @@ void Book::updateBookFileData() {
     newData.push_back(sUseEndTime);
     newData.push_back(sRoomNumber);
     userData.push_back(newData);
-    if (userData.size() != 2)
-      sort(userData.begin(), userData.end(), comp); 
+    if (userData.size() != 2) sort(userData.begin(), userData.end(), comp);
 }
 
 //book book x   
@@ -234,7 +225,7 @@ void Book::excuteBook() {
         updateBookFileData();
         updateBookfile();
         cout << this->sOriginDate << " " << this->sRoomNumber << "번 스터디룸 " << this->sUseStartTime << " ~ "
-            << this->sUseEndTime << " 로 정상 예약되었습니다." << endl;
+             << this->sUseEndTime << " 로 정상 예약되었습니다." << endl;
     }
 }
 
@@ -314,8 +305,8 @@ void Book::validPeopleNumber() {
     vector<string> data = File::getMetaData();
     int i = stoi(data[3 + iRoomNumber]);
     if (this->peopleNum < 1) {
-        throw WrongRuleArgumentException(this->sRoomNumber, "예약 인원수는 1보다 커야합니다.");
+        throw WrongRuleArgumentException(this->sPeopleNum, "예약 인원수는 0보다 커야합니다.");
     }
     if (this->peopleNum > i)
-        throw WrongRuleArgumentException(this->sRoomNumber, "스터디룸의 최대 예약 가능 인원수를 초과하였습니다.");
+        throw WrongRuleArgumentException(this->sPeopleNum, "스터디룸의 최대 예약 가능 인원수를 초과하였습니다.");
 }

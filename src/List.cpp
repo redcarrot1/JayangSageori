@@ -24,7 +24,7 @@ void List::excuteList(string peopleNum, string date) {
         cout << i << " (" << File::getRoomCapacity(to_string(i)) << "인실)";
         for (int j = 0; j < 22; j++) {
             vector<vector<string>> newfileData = File::getBooking(date);
-            string hour = to_string(j/2 + 9);
+            string hour = to_string(j / 2 + 9);
             int min = j % 2;
             string minute;
             string startTime;
@@ -33,7 +33,7 @@ void List::excuteList(string peopleNum, string date) {
             if (min == 0) minute = "00";
             else minute = "30";
 
-            startTime = hour+":"+ minute;
+            startTime = hour + ":" + minute;
 
             if (min == 0) minute = "30";
             else {
@@ -44,7 +44,8 @@ void List::excuteList(string peopleNum, string date) {
             if (hour.length() == 1) hour = "0" + hour;
 
             endTime = hour + ":" + minute;
-            if ((stoi(File::getMetaData()[3 + i]) >= stoi(peopleNum)) && (stoi(File::getReserNum(newfileData[i][j])) < stoi(peopleNum))) {  // 제한인원보다 작으며, 예약이 존재할 시 예약의 인원수보다 내 인원수가 더 많아야 optimizer를 수행할 수 있다.
+            if ((stoi(File::getMetaData()[3 + i]) >= stoi(peopleNum)) && (stoi(File::getReserNum(newfileData[i][j])) <
+                                                                          stoi(peopleNum))) {  // 제한인원보다 작으며, 예약이 존재할 시 예약의 인원수보다 내 인원수가 더 많아야 optimizer를 수행할 수 있다.
                 if (Optimize::optimize(date, startTime, endTime, to_string(i)).size() > 1) {
                     cout << left << setw(7) << " 가능 ";
                 }
@@ -81,7 +82,6 @@ void List::validDate(string date) {
         if (inputDay < 0 || inputDay > 31) throw WrongRuleArgumentException(date, "존재하지 않는 일(day)입니다.");
     }
 
-
     time_t now;
     time(&now);
 
@@ -110,8 +110,7 @@ void List::validDate(string date) {
 
 void List::validPeopleNumber(string peopleNum) {
     vector<string> data = File::getMetaData();
-    int i = stoi(data[3 + stoi(peopleNum)]);
     if (stoi(peopleNum) < 1) {
-        throw WrongRuleArgumentException(peopleNum, "예약 인원수는 1보다 커야합니다.");
+        throw WrongRuleArgumentException(peopleNum, "예약 인원수는 0보다 커야합니다.");
     }
 }
