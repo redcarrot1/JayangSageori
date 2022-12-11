@@ -18,11 +18,6 @@ void List::excuteList(string peopleNum, string date) {
         else time = hour + ":30";
         cout << left << setw(6) << time;
     }
-    /*
-    signin test 12341234
-    book
-    list 2
-    */
 
     cout << endl;
     for (int i = 1; i < 10; i++) {
