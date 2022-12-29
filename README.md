@@ -1,5 +1,5 @@
 # JayangSageori
-2022-2 전기프2 프로젝트
+2022년 2학기 전공기초프로젝트2 [A04]팀 프로젝트 코드
 
 ## 파일
 ### resource, user, book
